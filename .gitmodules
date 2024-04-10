@@ -1,0 +1,9 @@
+[submodule "table2taste-backend"]
+	path = table2taste-backend
+	url = git@github.com:Table2Taste/table2taste-backend.git
+[submodule "table2taste-frontend"]
+	path = table2taste-frontend
+	url = git@github.com:Table2Taste/table2taste-frontend.git
+[submodule "table2taste-db"]
+	path = table2taste-db
+	url = git@github.com:Table2Taste/table2taste-db.git
