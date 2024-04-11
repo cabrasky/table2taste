@@ -15,26 +15,27 @@ services:
       - db
     command: sleep infinity
 
-#  frontend:
-#    build:
-#      context: table2taste-frontend
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./table2taste-frontend:/app:cached
-#    ports:
-#      - "8000:8000"
-#    env_file:
-#      - .env
-#    depends_on:
-#      - backend
-#    command: sleep infinity
+  frontend:
+    build:
+      context: table2taste-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./table2taste-frontend:/app:cached
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    command: sleep infinity
 
   db:
     build:
       context: table2taste-db
       dockerfile: Dockerfile
     volumes:
-      - ./table2taste-db:/app:cached
+      - ./table2taste-db/data:/var/lib/postgresql/data
+      - ./table2taste-db/db-init-scripts:/docker-entrypoint-initdb.d:cached
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
