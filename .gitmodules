@@ -7,3 +7,6 @@
 [submodule "table2taste-db"]
 	path = table2taste-db
 	url = git@github.com:Table2Taste/table2taste-db.git
+[submodule "table2taste-backend_springboot"]
+	path = table2taste-backend_springboot
+	url = git@github.com:Table2Taste/table2taste-backend_springboot.git
