@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -7,8 +5,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./table2taste-backend_springboot:/app:cached
-    ports:
-      - "8080:8080"
     env_file:
       - .env
     depends_on:
@@ -22,7 +18,7 @@ services:
     volumes:
       - ./table2taste-frontend:/app:cached
     ports:
-      - "3000:3000"
+      - "3000:80"
     env_file:
       - .env
     depends_on:
@@ -39,6 +35,4 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
-    ports:
-      - "5432:5432"
     restart: unless-stopped
