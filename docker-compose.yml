@@ -3,12 +3,12 @@ version: '3.8'
 services:
   backend:
     build:
-      context: table2taste-backend
+      context: table2taste-backend_springboot
       dockerfile: Dockerfile
     volumes:
-      - ./table2taste-backend:/app:cached
+      - ./table2taste-backend_springboot:/app:cached
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - .env
     depends_on:
@@ -27,7 +27,7 @@ services:
       - .env
     depends_on:
       - backend
-    command: sleep infinity
+    restart: unless-stopped
 
   db:
     build:
@@ -35,10 +35,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./table2taste-db/data:/var/lib/postgresql/data
-      - ./table2taste-db/db-init-scripts:/docker-entrypoint-initdb.d:cached
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
     ports:
       - "5432:5432"
+    restart: unless-stopped
