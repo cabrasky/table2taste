@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Table2Taste — Architecture</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020617;color:#e2e8f0;font-family:'JetBrains Mono',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 20px}
+.container{max-width:1100px;width:100%}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:28px;font-weight:700;color:#f1f5f9}
+.header .subtitle{font-size:12px;color:#64748b;margin-top:6px}
+.diagram-card{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:32px;overflow-x:auto}
+.diagram-card svg{display:block;margin:0 auto}
+.info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:16px}
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.card-dot{width:8px;height:8px;border-radius:50%}
+.card-dot.cyan{background:#22d3ee}
+.card-dot.emerald{background:#34d399}
+.card-dot.violet{background:#a78bfa}
+.card h3{font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.card ul{list-style:none}
+.card ul li{font-size:10px;color:#64748b;padding:3px 0;line-height:1.5}
+.footer{text-align:center;margin-top:24px;font-size:9px;color:#475569}
+@media(max-width:768px){.info-cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>Table2Taste</h1>
+<p class="subtitle">QR Menu System — Architecture Overview</p>
+</div>
+<div class="diagram-card">
+<!-- SVG Diagram -->
+<svg width="1000" height="650" xmlns="http://www.w3.org/2000/svg" style="background:#0f172a">
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+</pattern>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+</marker>
+<marker id="arrow-ws" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#fb923c"/>
+</marker>
+</defs>
+<rect width="1000" height="650" fill="url(#grid)"/>
+
+<!-- Legend -->
+<rect x="730" y="20" width="240" height="130" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+<text x="740" y="40" fill="#64748b" font-size="9" font-weight="600">LEGEND</text>
+<rect x="740" y="50" width="12" height="12" rx="2" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1"/>
+<text x="760" y="60" fill="#94a3b8" font-size="9">Frontend</text>
+<rect x="740" y="70" width="12" height="12" rx="2" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1"/>
+<text x="760" y="80" fill="#94a3b8" font-size="9">Backend</text>
+<rect x="740" y="90" width="12" height="12" rx="2" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1"/>
+<text x="760" y="100" fill="#94a3b8" font-size="9">Database</text>
+<rect x="880" y="50" width="12" height="12" rx="2" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1"/>
+<text x="898" y="60" fill="#94a3b8" font-size="9">External</text>
+<line x1="880" y1="78" x2="920" y2="78" stroke="#fb923c" stroke-width="1.5"/>
+<text x="898" y="88" fill="#94a3b8" font-size="9">WebSocket</text>
+<line x1="880" y1="106" x2="920" y2="106" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="898" y="116" fill="#94a3b8" font-size="9">HTTP / REST</text>
+
+<!-- Client -->
+<rect x="190" y="170" width="170" height="80" rx="6" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+<rect x="190" y="170" width="170" height="80" rx="6" fill="none" stroke="#22d3ee" stroke-width="1.5" opacity="1"/>
+<text x="275" y="205" fill="#22d3ee" font-size="12" text-anchor="middle" font-weight="600">Browser / Client</text>
+<text x="275" y="222" fill="#64748b" font-size="9" text-anchor="middle">React SPA (PWA)</text>
+<text x="275" y="236" fill="#64748b" font-size="9" text-anchor="middle">port :3000</text>
+
+<!-- nginx reverse proxy -->
+<rect x="490" y="170" width="170" height="80" rx="6" fill="rgba(30,41,59,0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="575" y="205" fill="#94a3b8" font-size="12" text-anchor="middle" font-weight="600">nginx</text>
+<text x="575" y="222" fill="#64748b" font-size="9" text-anchor="middle">Reverse Proxy</text>
+<text x="575" y="236" fill="#64748b" font-size="9" text-anchor="middle">Static Files</text>
+
+<!-- Spring Backend -->
+<rect x="470" y="340" width="210" height="90" rx="6" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+<text x="575" y="372" fill="#34d399" font-size="12" text-anchor="middle" font-weight="600">Spring Boot API</text>
+<text x="575" y="390" fill="#64748b" font-size="9" text-anchor="middle">REST Controllers</text>
+<text x="575" y="404" fill="#64748b" font-size="9" text-anchor="middle">JPA / Hibernate</text>
+<text x="575" y="418" fill="#64748b" font-size="9" text-anchor="middle">port :8080</text>
+
+<!-- PostgreSQL -->
+<rect x="490" y="510" width="170" height="80" rx="6" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+<text x="575" y="545" fill="#a78bfa" font-size="12" text-anchor="middle" font-weight="600">PostgreSQL</text>
+<text x="575" y="562" fill="#64748b" font-size="9" text-anchor="middle">Menu / Orders / Users</text>
+<text x="575" y="576" fill="#64748b" font-size="9" text-anchor="middle">port :5432</text>
+
+<!-- Ticket Printer -->
+<rect x="190" y="340" width="170" height="80" rx="6" fill="rgba(251,146,60,0.3)" stroke="#fb923c" stroke-width="1.5"/>
+<text x="275" y="375" fill="#fb923c" font-size="12" text-anchor="middle" font-weight="600">Ticket Printer</text>
+<text x="275" y="392" fill="#64748b" font-size="9" text-anchor="middle">WebSocket Client</text>
+<text x="275" y="406" fill="#64748b" font-size="9" text-anchor="middle">Order / Receipt</text>
+
+<!-- Arrows: Client → nginx -->
+<line x1="360" y1="210" x2="490" y2="210" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Arrows: nginx → Backend (HTTP /api) -->
+<line x1="575" y1="250" x2="575" y2="340" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Arrows: Backend → DB -->
+<line x1="575" y1="430" x2="575" y2="510" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- WebSocket: Backend → Printer -->
+<line x1="470" y1="380" x2="360" y2="380" stroke="#fb923c" stroke-width="1.5" marker-end="url(#arrow-ws)"/>
+<text x="415" y="372" fill="#fb923c" font-size="9" text-anchor="middle">WS</text>
+<text x="415" y="386" fill="#fb923c" font-size="9" text-anchor="middle">/ws/orderPrinter</text>
+<text x="415" y="400" fill="#fb923c" font-size="9" text-anchor="middle">/ws/receiptPrinter</text>
+
+<!-- API Labels -->
+<text x="430" y="285" fill="#64748b" font-size="9" text-anchor="middle">HTTP /api/*</text>
+<text x="430" y="298" fill="#64748b" font-size="9" text-anchor="middle">JWT Auth — JSON/REST</text>
+
+<!-- static files -->
+<text x="430" y="180" fill="#64748b" font-size="9" text-anchor="middle">Static Assets (HTML/JS/CSS)</text>
+
+</svg>
+</div>
+
+<div class="info-cards">
+<div class="card">
+<div class="card-header">
+<div class="card-dot cyan"></div>
+<h3>Frontend</h3>
+</div>
+<ul>
+<li>React 18 + TypeScript</li>
+<li>MUI 5 (Material Design)</li>
+<li>react-router-dom v6</li>
+<li>axios / JWT auth</li>
+<li>i18n (ES, EN)</li>
+<li>PWA-ready</li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-dot emerald"></div>
+<h3>Backend</h3>
+</div>
+<ul>
+<li>Spring Boot 3.2.5</li>
+<li>Java 17 + Maven</li>
+<li>JPA / Hibernate ORM</li>
+<li>JWT Authentication</li>
+<li>WebSocket (Ticket Printer)</li>
+<li>Swagger (springdoc)</li>
+<li>Image Upload</li>
+</ul>
+</div>
+<div class="card">
+<div class="card-header">
+<div class="card-dot violet"></div>
+<h3>Database</h3>
+</div>
+<ul>
+<li>PostgreSQL 16</li>
+<li>20 languages</li>
+<li>Multi-lingual translations</li>
+<li>Categories (tree)</li>
+<li>Allergens</li>
+<li>Orders + OrderItems</li>
+<li>Users / Groups / Privileges</li>
+</ul>
+</div>
+</div>
+<div class="footer">Table2Taste — QR Digital Menu System • Apache 2.0</div>
+</div>
+</body>
+</html>
