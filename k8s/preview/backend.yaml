@@ -77,11 +77,11 @@ spec:
               value: "-Dliquibase.secureParsing=false"
           resources:
             requests:
-              cpu: "50m"
-              memory: "128Mi"
+              cpu: "100m"
+              memory: "384Mi"
             limits:
-              cpu: "250m"
-              memory: "256Mi"
+              cpu: "500m"
+              memory: "768Mi"
           startupProbe:
             tcpSocket:
               port: 8080
