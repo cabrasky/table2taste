@@ -100,7 +100,8 @@ pipeline {
                         -Dspring.datasource.url=jdbc:postgresql://localhost:15432/table2taste \
                         -Dspring.datasource.username=table2taste \
                         -Dspring.datasource.password=1234test \
-                        -Dspring.liquibase.enabled=true'''
+                        -Dspring.liquibase.enabled=true \
+                        -Dliquibase.secureParsing=false'''
                 }
             }
             post {
