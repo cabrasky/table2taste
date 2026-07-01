@@ -5,170 +5,99 @@
     background: #f0f4f2;
 }
 
-/* ====== Hero Section ====== */
-.menu-hero {
+/* ====== Top Bar ====== */
+.menu-top-bar {
     background: white;
-    padding: 32px 24px 16px;
-    text-align: center;
-    border-bottom: 1px solid #e8ecea;
-}
-
-.menu-hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.menu-hero-title {
-    font-family: "Inter", "Mooli", sans-serif;
-    font-size: 28px;
-    font-weight: 700;
-    color: #272830;
-    margin-bottom: 4px;
-}
-
-.menu-hero-subtitle {
-    font-family: "Inter", "Mooli", sans-serif;
-    font-size: 15px;
-    color: #858585;
-    font-weight: 400;
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.5;
-}
-
-/* ====== Toolbar ====== */
-.menu-toolbar {
-    background: white;
-    border-bottom: 1px solid #e8ecea;
-    position: sticky;
-    top: 64px;
-    z-index: 100;
-}
-
-.menu-toolbar-inner {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 12px 24px;
+    padding: 16px 24px 8px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
 }
 
-.menu-search {
-    flex: 1;
-    max-width: 400px;
-}
-
-.menu-search .MuiOutlinedInput-root {
-    border-radius: 28px;
-    background: #f5f7f6;
-    transition: all 0.2s ease;
-}
-
-.menu-search .MuiOutlinedInput-root:hover {
-    background: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.menu-search .MuiOutlinedInput-root.Mui-focused {
-    background: white;
-    box-shadow: 0 2px 12px rgba(195, 98, 65, 0.12);
-}
-
-.menu-search .MuiOutlinedInput-notchedOutline {
-    border-color: transparent;
-}
-
-.menu-search .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: var(--main-color-40);
-}
-
-.menu-search .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: var(--main-color);
-    border-width: 2px;
-}
-
-.search-icon {
-    color: var(--grey-50);
-}
-
-.filter-button {
+.allergen-selector-btn {
     border-radius: 28px !important;
-    border: none !important;
-    background: #f5f7f6 !important;
-    color: var(--grey-70) !important;
+    border: 1px solid #e0e4e2 !important;
+    background: white !important;
+    color: #555 !important;
     text-transform: none !important;
     font-family: "Inter", "Mooli", sans-serif !important;
     font-weight: 500 !important;
     font-size: 14px !important;
-    padding: 8px 20px !important;
-    gap: 8px !important;
+    padding: 10px 24px !important;
+    gap: 10px !important;
     transition: all 0.2s ease !important;
     white-space: nowrap;
 }
 
-.filter-button:hover {
+.allergen-selector-btn:hover {
+    border-color: var(--main-color-40) !important;
     background: var(--main-color-10) !important;
     color: var(--main-color) !important;
 }
 
-.filter-badge .MuiBadge-badge {
-    background-color: var(--main-color) !important;
+.allergen-selector-btn .allergen-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
 }
 
-/* ====== Category Tabs ====== */
-.category-tabs-container {
+.allergen-badge .MuiBadge-badge {
+    background-color: var(--main-color) !important;
+    font-size: 11px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+}
+
+/* ====== Category Pills ====== */
+.category-pills-container {
     background: white;
+    padding: 8px 24px 12px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     border-bottom: 1px solid #e8ecea;
 }
 
-.category-tabs {
-    max-width: 1400px;
-    margin: 0 auto;
-    min-height: 44px !important;
+.category-pills-container::-webkit-scrollbar {
+    display: none;
 }
 
-.category-tabs .MuiTabs-scrollButtons.Mui-disabled {
-    opacity: 0.3;
-}
-
-.category-tab {
-    min-height: 44px !important;
-    padding: 6px 18px !important;
-    text-transform: none !important;
-    font-family: "Inter", "Mooli", sans-serif !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    color: #858585 !important;
-    transition: all 0.2s ease !important;
-    border-radius: 0;
-}
-
-.category-tab.Mui-selected {
-    color: var(--main-color) !important;
-    font-weight: 600 !important;
-}
-
-.category-tab:hover {
-    color: var(--main-color) !important;
-    background: rgba(195, 98, 65, 0.04) !important;
-}
-
-.category-tab-label {
-    display: flex;
+.category-pill {
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    padding: 7px 18px;
+    border-radius: 28px;
+    border: 1px solid #e0e4e2;
+    background: white;
+    color: #555;
+    font-family: "Inter", "Mooli", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-.category-tab-icon {
-    display: flex;
-    align-items: center;
-    color: var(--main-color-40);
-    font-size: 18px;
-}
-
-.category-tab.Mui-selected .category-tab-icon {
+.category-pill:hover {
+    border-color: var(--main-color-40);
     color: var(--main-color);
+    background: var(--main-color-10);
+}
+
+.category-pill.active {
+    background: var(--main-color);
+    color: white;
+    border-color: var(--main-color);
+    font-weight: 600;
+}
+
+.category-pill.active:hover {
+    background: var(--main-color-70);
+    border-color: var(--main-color-70);
 }
 
 /* ====== Menu Content ====== */
@@ -182,7 +111,7 @@
 
 .menu-items-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
 }
 
@@ -312,31 +241,8 @@
 
 /* ====== Responsive ====== */
 @media only screen and (max-width: 768px) {
-    .menu-hero {
-        padding: 24px 16px 12px;
-    }
-
-    .menu-hero-title {
-        font-size: 22px;
-    }
-
-    .menu-hero-subtitle {
-        font-size: 14px;
-    }
-
-    .menu-toolbar-inner {
-        padding: 10px 16px;
-        flex-wrap: wrap;
-    }
-
-    .menu-search {
-        max-width: 100%;
-        flex: 1 1 100%;
-        order: 2;
-    }
-
-    .filter-button {
-        flex-shrink: 0;
+    .menu-top-bar {
+        padding: 12px 16px 6px;
     }
 
     .menu-content {
@@ -348,13 +254,8 @@
         gap: 16px;
     }
 
-    .category-tabs-container {
-        overflow-x: auto;
-    }
-
-    .category-tab {
-        padding: 6px 14px !important;
-        font-size: 13px !important;
+    .category-pills-container {
+        padding: 6px 16px 10px;
     }
 
     .allergen-drawer {

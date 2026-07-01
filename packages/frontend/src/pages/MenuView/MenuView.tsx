@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FormControlLabel, Checkbox, Tabs, Tab, TextField, InputAdornment, Drawer, IconButton, Button, Badge } from '@mui/material';
+import { FormControlLabel, Checkbox, Drawer, IconButton, Button, Badge } from '@mui/material';
 import MenuItemListedElement from '../../components/MenuItem/MenuItemListedElement';
 import { Allergen } from '../../models/Allergen';
 import { MenuItem } from '../../models/MenuItem';
@@ -13,7 +13,7 @@ import { categoryService } from '../../services/CategoryService';
 import "./style.css";
 import { useBreadcrumbs } from '../../contexts/BreadcrumbContext';
 import Translate from '../../components/Translate';
-import { Search, FilterList, Close, RestaurantMenu } from '@mui/icons-material';
+import { Close, RestaurantMenu } from '@mui/icons-material';
 
 interface Props {
     admin?: boolean;
@@ -24,20 +24,18 @@ const MenuView: React.FC<Props> = ({ admin = false }) => {
     const [allergens, setAllergens] = useState<Allergen[]>([]);
     const [rootCategories, setRootCategories] = useState<Category[]>([]);
     const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
-    const [selectedCategoryTab, setSelectedCategoryTab] = useState<number>(0);
-    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [selectedCategoryIndex, setSelectedCategoryIndex] = useState<number>(0);
     const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
     const { id } = useParams<{ id: string }>();
     const { setBreadcrumbs } = useBreadcrumbs();
-    const tabsRef = useRef<HTMLDivElement>(null);
+    const categoriesRef = useRef<HTMLDivElement>(null);
 
-    // Build category tabs: root categories + "All" option
-    const categoryTabs = [
-        { id: '', label: 'All', icon: <RestaurantMenu /> },
+    // Build category pills: root categories + "All" option
+    const categoryPills = [
+        { id: '', label: 'All' },
         ...rootCategories.map(cat => ({
             id: cat.id,
             label: cat.translations?.find(t => t.translationKey === 'name')?.value || cat.id,
-            icon: null
         }))
     ];
 
@@ -94,102 +92,49 @@ const MenuView: React.FC<Props> = ({ admin = false }) => {
     }, [selectedAllergens, id]);
 
     const handleAllergenChange = (allergenId: string) => {
-        setSelectedAllergens(prevSelectedAllergens =>
-            prevSelectedAllergens.includes(allergenId)
-                ? prevSelectedAllergens.filter(id => id !== allergenId)
-                : [...prevSelectedAllergens, allergenId]
+        setSelectedAllergens(prev =>
+            prev.includes(allergenId)
+                ? prev.filter(id => id !== allergenId)
+                : [...prev, allergenId]
         );
     };
 
-    const handleCategoryTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-        setSelectedCategoryTab(newValue);
+    const handleCategoryClick = (index: number) => {
+        setSelectedCategoryIndex(index);
     };
 
-    // Filter items by search query
-    const filteredBySearch = menuItems.filter(item => {
-        if (!searchQuery.trim()) return true;
-        const name = item.translations?.find(t => t.translationKey === 'name')?.value || '';
-        const desc = item.translations?.find(t => t.translationKey === 'description')?.value || '';
-        return name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               desc.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-
-    // Filter items by selected category tab
-    const displayedItems = selectedCategoryTab === 0
-        ? filteredBySearch
-        : filteredBySearch.filter(item => item.categoryId === categoryTabs[selectedCategoryTab]?.id);
+    // Filter items by selected category
+    const displayedItems = selectedCategoryIndex === 0
+        ? menuItems
+        : menuItems.filter(item => item.categoryId === categoryPills[selectedCategoryIndex]?.id);
 
     return (
         <div className='menu-view'>
-            {/* Hero Section */}
-            <div className="menu-hero">
-                <div className="menu-hero-content">
-                    <h1 className="menu-hero-title">
-                        <Translate translationKey={admin ? "gui.menu.admin" : "gui.menu"} />
-                    </h1>
-                    <p className="menu-hero-subtitle">
-                        <Translate translationKey="gui.menu.subtitle" />
-                    </p>
-                </div>
-            </div>
-
-            {/* Search and Filter Bar */}
-            <div className="menu-toolbar">
-                <div className="menu-toolbar-inner">
-                    <TextField
-                        className="menu-search"
-                        placeholder="Search menu..."
-                        variant="outlined"
-                        size="small"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search className="search-icon" />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <Button
-                        className="filter-button"
-                        variant="outlined"
-                        startIcon={<FilterList />}
-                        onClick={() => setFilterDrawerOpen(true)}
-                    >
-                        <Translate translationKey="gui.filters" />
-                        {selectedAllergens.length > 0 && (
-                            <Badge badgeContent={selectedAllergens.length} color="primary" className="filter-badge" />
-                        )}
-                    </Button>
-                </div>
-            </div>
-
-            {/* Category Tabs */}
-            <div className="category-tabs-container" ref={tabsRef}>
-                <Tabs
-                    value={selectedCategoryTab}
-                    onChange={handleCategoryTabChange}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    className="category-tabs"
-                    TabIndicatorProps={{
-                        style: { backgroundColor: 'var(--main-color)', height: 3 }
-                    }}
+            {/* Allergen Selector — prominent pill button at top, like gosushing */}
+            <div className="menu-top-bar">
+                <Button
+                    className="allergen-selector-btn"
+                    startIcon={<AllergenIcon allergenId="" />}
+                    onClick={() => setFilterDrawerOpen(true)}
                 >
-                    {categoryTabs.map((cat, index) => (
-                        <Tab
-                            key={index}
-                            label={
-                                <div className="category-tab-label">
-                                    {cat.icon && <span className="category-tab-icon">{cat.icon}</span>}
-                                    <span>{cat.label}</span>
-                                </div>
-                            }
-                            className="category-tab"
-                        />
-                    ))}
-                </Tabs>
+                    <Translate translationKey="gui.allergen.select" />
+                    {selectedAllergens.length > 0 && (
+                        <Badge badgeContent={selectedAllergens.length} color="primary" className="allergen-badge" />
+                    )}
+                </Button>
+            </div>
+
+            {/* Category Pills — horizontal scroll, like gosushing */}
+            <div className="category-pills-container" ref={categoriesRef}>
+                {categoryPills.map((cat, index) => (
+                    <button
+                        key={index}
+                        className={`category-pill ${index === selectedCategoryIndex ? 'active' : ''}`}
+                        onClick={() => handleCategoryClick(index)}
+                    >
+                        {cat.label}
+                    </button>
+                ))}
             </div>
 
             {/* Menu Items Grid */}

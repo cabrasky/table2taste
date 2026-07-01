@@ -3,25 +3,13 @@ import "./style.css";
 import { MenuItem } from "../../models/MenuItem";
 import Translate from "../Translate";
 import AllergenIcon from "../AllergenIcon/AllergenIcon";
-import { useCart } from "../../contexts/CartContext";
-import { IconButton, Tooltip } from "@mui/material";
-import { AddShoppingCart, Restaurant } from "@mui/icons-material";
+import { Restaurant } from "@mui/icons-material";
 
 interface Props {
   menuItem: MenuItem;
-  onAddToCart?: () => void;
 }
 
-const MenuItemListedElement: React.FC<Props> = ({ menuItem, onAddToCart }) => {
-  const { addToCart } = useCart();
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart({ id: menuItem.id!, quantity: 1, annotations: "" });
-    if (onAddToCart) onAddToCart();
-  };
-
+const MenuItemListedElement: React.FC<Props> = ({ menuItem }) => {
   return (
     <div className="menu-item-card">
       <div className="menu-item-card-image-wrapper">
@@ -37,17 +25,6 @@ const MenuItemListedElement: React.FC<Props> = ({ menuItem, onAddToCart }) => {
         />
         <div className="menu-item-card-image-fallback">
           <Restaurant className="fallback-icon" />
-        </div>
-        <div className="menu-item-card-overlay">
-          <Tooltip title="Add to cart" arrow>
-            <IconButton
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-              size="large"
-            >
-              <AddShoppingCart />
-            </IconButton>
-          </Tooltip>
         </div>
       </div>
       <div className="menu-item-card-content">
