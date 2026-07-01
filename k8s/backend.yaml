@@ -157,3 +157,18 @@ spec:
   selector:
     app: table2taste-backend
   type: ClusterIP
+---
+# Alias "backend" para compatibilidad con nginx.conf (frontend proxy_pass)
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: table2taste
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: table2taste-backend
+  type: ClusterIP
