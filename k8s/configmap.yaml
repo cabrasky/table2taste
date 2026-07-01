@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: table2taste-config
+  namespace: table2taste
+data:
+  DB_URL: "jdbc:postgresql://db:5432/table2taste"
+  JWT_EXPIRATION_MS: "3600000"
+  DEFAULT_LANGUAGE: "es"
+  FILE_PATH: "uploads/"
+  SPRING_JPA_SHOW_SQL: "false"
+  BACKEND_INTERNAL_URL: "http://table2taste-backend:8080/api"
+  REACT_APP_API_URL: "https://table2taste.cabrasky.net/api"

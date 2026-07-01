@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: table2taste-frontend
+  namespace: table2taste
+  labels:
+    app: table2taste-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: table2taste-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: table2taste-frontend
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: table2taste-frontend
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: frontend
+          image: 192.168.1.11:5000/table2taste-frontend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "125m"
+              memory: "160Mi"
+            limits:
+              cpu: "350m"
+              memory: "448Mi"
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            failureThreshold: 18
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: table2taste-frontend
+  namespace: table2taste
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: table2taste-frontend
+  type: ClusterIP

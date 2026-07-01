@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: table2taste-backend
+  namespace: table2taste
+  labels:
+    app: table2taste-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: table2taste-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: table2taste-backend
+    spec:
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: table2taste-backend
+                topologyKey: kubernetes.io/hostname
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h db -p 5432 -U "$PGUSER"; do
+                echo "waiting for db..."
+                sleep 2
+              done
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: table2taste-secrets
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: table2taste-secrets
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "50m"
+              memory: "64Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 70
+      containers:
+        - name: backend
+          image: 192.168.1.11:5000/table2taste-backend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_URL
+                  name: table2taste-config
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_USER
+                  name: table2taste-secrets
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: POSTGRES_PASSWORD
+                  name: table2taste-secrets
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_SECRET
+                  name: table2taste-secrets
+            - name: JWT_EXPIRATION_MS
+              valueFrom:
+                configMapKeyRef:
+                  key: JWT_EXPIRATION_MS
+                  name: table2taste-config
+            - name: DEFAULT_LANGUAGE
+              valueFrom:
+                configMapKeyRef:
+                  key: DEFAULT_LANGUAGE
+                  name: table2taste-config
+            - name: FILE_PATH
+              valueFrom:
+                configMapKeyRef:
+                  key: FILE_PATH
+                  name: table2taste-config
+            - name: TABLE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: TABLE_PASSWORD
+                  name: table2taste-secrets
+            - name: SPRING_JPA_SHOW_SQL
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_JPA_SHOW_SQL
+                  name: table2taste-config
+            - name: TZ
+              value: "Europe/Madrid"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: table2taste-backend
+  namespace: table2taste
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: table2taste-backend
+  type: ClusterIP
