@@ -101,7 +101,8 @@ pipeline {
                         -Dspring.datasource.username=table2taste \
                         -Dspring.datasource.password=1234test \
                         -Dspring.liquibase.enabled=true \
-                        -Dliquibase.secureParsing=false'''
+                        -Dliquibase.secureParsing=false \
+                        -Dspring.jpa.hibernate.ddl-auto=none'''
                 }
             }
             post {
