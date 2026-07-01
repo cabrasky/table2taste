@@ -17,8 +17,8 @@ pipeline {
         REGISTRY        = "192.168.1.11:5000"
         BACKEND_IMAGE   = "${REGISTRY}/table2taste-backend"
         FRONTEND_IMAGE  = "${REGISTRY}/table2taste-frontend"
-        SONAR_TOKEN    = credentials('sonarqube-token')
         SONAR_HOST_URL = "https://sonar.cabrasky.net"
+        SONAR_TOKEN    = "squ_5537577d8820c174a2e260176e45f68ee2976c3b"
     }
 
     parameters {
