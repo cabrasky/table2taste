@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Service.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.model</a> &gt; <span class="el_source">Service.java</span></div><h1>Service.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.model;
+
+import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.micrometer.common.lang.Nullable;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+@Entity
+@jakarta.persistence.Table(name = &quot;service&quot;)
+<span class="fc" id="L25">public class Service implements ModelInterface&lt;Long&gt; {</span>
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
+	@Column(name = &quot;id&quot;)
+	private Long id;
+
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = &quot;table_id&quot;)
+	private Table table;
+
+	@CreationTimestamp
+	@Column(name = &quot;open_timestamp&quot;)
+	private Timestamp openTimestamp;
+
+	@Column(name = &quot;close_timestamp&quot;)
+	@Nullable
+	private Timestamp closeTimestamp;
+
+<span class="fc" id="L45">	@Column(name = &quot;is_open&quot;)</span>
+<span class="fc" id="L46">	private Boolean isOpen = true;</span>
+
+<span class="fc" id="L48">	@OneToMany(mappedBy = &quot;service&quot;, cascade = CascadeType.ALL, orphanRemoval = true)</span>
+	private Set&lt;Order&gt; orders = new HashSet&lt;&gt;();
+
+	// Getters and setters
+
+	public Long getId() {
+<span class="nc" id="L54">		return id;</span>
+	}
+
+	public Table getTable() {
+<span class="nc" id="L58">		return table;</span>
+	}
+
+	public void setTable(Table table) {
+<span class="nc" id="L62">		this.table = table;</span>
+<span class="nc" id="L63">	}</span>
+
+	public Timestamp getOpenTimestamp() {
+<span class="nc" id="L66">		return openTimestamp;</span>
+	}
+
+	public Timestamp getCloseTimestamp() {
+<span class="nc" id="L70">		return closeTimestamp;</span>
+	}
+
+	public void setCloseTimestamp(Timestamp closeTimestamp) {
+<span class="nc" id="L74">		this.closeTimestamp = closeTimestamp;</span>
+<span class="nc" id="L75">	}</span>
+
+	public Boolean getIsOpen() {
+<span class="nc" id="L78">		return isOpen;</span>
+	}
+
+	public void setIsOpen(Boolean isOpen) {
+<span class="nc" id="L82">		this.isOpen = isOpen;</span>
+<span class="nc" id="L83">	}</span>
+
+	public Set&lt;Order&gt; getOrders() {
+<span class="nc" id="L86">		return orders;</span>
+	}
+
+	public void setOrders(Set&lt;Order&gt; orders) {
+<span class="nc" id="L90">		this.orders = new HashSet&lt;&gt;(orders);</span>
+<span class="nc" id="L91">	}</span>
+
+	public Set&lt;OrderItemQuantity&gt; getAllOrderItems() {
+<span class="nc" id="L94">		return orders.stream().flatMap(order -&gt; order.getOrderItemQuantities().stream()).collect(Collectors</span>
+<span class="nc" id="L95">				.groupingBy(OrderItemQuantity::getOrderItem, Collectors.summingInt(OrderItemQuantity::getQuantity)))</span>
+<span class="nc" id="L96">				.entrySet().stream().map(entry -&gt; {</span>
+<span class="nc" id="L97">					OrderItemQuantity orderItemQuantity = new OrderItemQuantity();</span>
+<span class="nc" id="L98">					orderItemQuantity.setOrderItem(entry.getKey());</span>
+<span class="nc" id="L99">					orderItemQuantity.setQuantity(entry.getValue());</span>
+<span class="nc" id="L100">					return orderItemQuantity;</span>
+<span class="nc" id="L101">				}).collect(Collectors.toSet());</span>
+	}
+
+	public Double getTotalPrice() {
+<span class="nc" id="L105">		return getAllOrderItems().stream().mapToDouble(</span>
+<span class="nc" id="L106">				orderItemQuantity -&gt; orderItemQuantity.getOrderItem().getPrice() * orderItemQuantity.getQuantity())</span>
+<span class="nc" id="L107">				.sum();</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

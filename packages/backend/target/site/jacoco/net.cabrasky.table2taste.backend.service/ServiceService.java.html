@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.service</a> &gt; <span class="el_source">ServiceService.java</span></div><h1>ServiceService.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.service;
+
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import net.cabrasky.table2taste.backend.model.MenuItem;
+import net.cabrasky.table2taste.backend.model.OrderItem;
+import net.cabrasky.table2taste.backend.model.OrderItemQuantity;
+import net.cabrasky.table2taste.backend.model.Service;
+import net.cabrasky.table2taste.backend.model.Table;
+import net.cabrasky.table2taste.backend.repository.ServiceRepository;
+import net.cabrasky.table2taste.backend.repository.TableRepository;
+import net.cabrasky.table2taste.backend.websocket.TicketPrinterFinalTicketWebSocketHandler;
+
+@org.springframework.stereotype.Service
+<span class="fc" id="L27">public class ServiceService {</span>
+
+	@Autowired
+	private TableRepository tableRepository;
+
+	@Autowired
+	private ServiceRepository serviceRepository;
+
+	@Autowired
+	private TicketPrinterFinalTicketWebSocketHandler ticketPrinterFinalTicketWebSocketHandler;
+
+	@Transactional
+	public Service closeService(Table table) {
+<span class="nc bnc" id="L40" title="All 4 branches missed.">		if (table !=null &amp;&amp; table.getLastService() != null) {</span>
+<span class="nc" id="L41">			Service service = table.getLastService();</span>
+<span class="nc" id="L42">			service.setIsOpen(false);</span>
+<span class="nc" id="L43">			service.setCloseTimestamp(new Timestamp(new Date().getTime()));</span>
+<span class="nc" id="L44">			service = serviceRepository.save(service);</span>
+<span class="nc" id="L45">			table.setLastService(null);</span>
+<span class="nc" id="L46">			tableRepository.save(table);</span>
+
+<span class="nc" id="L48">			JsonObject closureMessage = createClosureMessage(service);</span>
+<span class="nc" id="L49">			ticketPrinterFinalTicketWebSocketHandler.broadcast(closureMessage.toString());</span>
+
+<span class="nc" id="L51">			return service;</span>
+		}
+<span class="nc" id="L53">		return null;</span>
+	}
+
+	private JsonObject createClosureMessage(Service service) {
+<span class="nc" id="L57">	    JsonObject message = new JsonObject();</span>
+<span class="nc" id="L58">	    message.addProperty(&quot;current_date&quot;, LocalDate.now().toString());</span>
+<span class="nc" id="L59">	    message.addProperty(&quot;current_time&quot;, LocalTime.now().toString());</span>
+<span class="nc" id="L60">	    message.addProperty(&quot;table_id&quot;, service.getTable().getId());</span>
+<span class="nc" id="L61">	    message.addProperty(&quot;close_timestamp&quot;, service.getCloseTimestamp().toString());</span>
+
+<span class="nc" id="L63">	    Map&lt;OrderItem, Integer&gt; combinedItems = combinedOrderItems(service.getAllOrderItems());</span>
+<span class="nc" id="L64">	    double totalPrice = calculateTotalPrice(combinedItems);</span>
+	    
+<span class="nc" id="L66">	    JsonArray items = new JsonArray();</span>
+<span class="nc" id="L67">		combinedItems.forEach((orderItem, quantity) -&gt; {</span>
+<span class="nc" id="L68">			JsonObject itemJson = createItemJson(orderItem, quantity);</span>
+<span class="nc" id="L69">			items.add(itemJson);</span>
+<span class="nc" id="L70">		});</span>
+	    
+<span class="nc" id="L72">	    message.add(&quot;items&quot;, items);</span>
+<span class="nc" id="L73">	    message.addProperty(&quot;total_price&quot;, totalPrice);</span>
+
+<span class="nc" id="L75">	    return message;</span>
+	}
+
+	private double calculateTotalPrice(Map&lt;OrderItem, Integer&gt; combinedItems) {
+<span class="nc" id="L79">		return combinedItems.entrySet().stream().mapToDouble(entry -&gt; entry.getKey().getPrice() * entry.getValue()).sum();</span>
+	}
+
+
+	private Map&lt;OrderItem, Integer&gt; combinedOrderItems(Set&lt;OrderItemQuantity&gt; orderItemQuantities) {
+<span class="nc" id="L84">		return orderItemQuantities.stream().collect(Collectors.groupingBy(</span>
+<span class="nc" id="L85">				orderItem -&gt; orderItem.getOrderItem(), Collectors.summingInt(OrderItemQuantity::getQuantity)));</span>
+	}
+
+	private JsonObject createItemJson(OrderItem orderItem, Integer quantity) {
+<span class="nc" id="L89">		JsonObject item = new JsonObject();</span>
+<span class="nc" id="L90">		MenuItem menuItem = orderItem.getMenuItem();</span>
+<span class="nc" id="L91">		item.addProperty(&quot;name&quot;, getMenuItemName(menuItem));</span>
+<span class="nc" id="L92">		item.addProperty(&quot;quantity&quot;, quantity);</span>
+<span class="nc" id="L93">		item.addProperty(&quot;annotations&quot;, orderItem.getAnnotations());</span>
+<span class="nc" id="L94">		item.addProperty(&quot;price&quot;, orderItem.getPrice() * quantity);</span>
+<span class="nc" id="L95">		return item;</span>
+	}
+
+	private String getMenuItemName(MenuItem menuItem) {
+<span class="nc" id="L99">		return menuItem.getTranslations().stream()</span>
+<span class="nc bnc" id="L100" title="All 4 branches missed.">				.filter(t -&gt; t.getLanguage().getId().equals(&quot;en&quot;) &amp;&amp; t.getTranslationKey().equals(&quot;name&quot;)).findFirst()</span>
+<span class="nc" id="L101">				.orElseThrow(() -&gt; new RuntimeException(&quot;Translation not found&quot;)).getValue();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

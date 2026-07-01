@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDetailsImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.jwt</a> &gt; <span class="el_source">UserDetailsImpl.java</span></div><h1>UserDetailsImpl.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.jwt;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import net.cabrasky.table2taste.backend.model.Privilege;
+import net.cabrasky.table2taste.backend.model.User;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+public class UserDetailsImpl implements UserDetails {
+    private static final long serialVersionUID = 1L;
+
+    private String username;
+
+    @JsonIgnore
+    private String password;
+
+    private String tableId;
+
+	private List&lt;GrantedAuthority&gt; privileges;
+
+<span class="nc" id="L29">    public UserDetailsImpl(User user) {</span>
+<span class="nc" id="L30">        this.username = user.getUsername();</span>
+<span class="nc" id="L31">        this.password = user.getPassword();</span>
+        
+<span class="nc" id="L33">        List&lt;GrantedAuthority&gt; privileges = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        for(Privilege privilate : user.getGroups().stream().flatMap(group -&gt; group.getPrivileges().stream()).toList()){</span>
+
+<span class="nc" id="L37">        	privileges.add(new SimpleGrantedAuthority(privilate.getId().toUpperCase()));</span>
+<span class="nc" id="L38">        }</span>
+<span class="nc" id="L39">        this.privileges = privileges;</span>
+<span class="nc" id="L40">        this.tableId = &quot;test&quot;;</span>
+
+<span class="nc" id="L42">    }</span>
+
+    public static UserDetailsImpl build(User user) {
+
+<span class="nc" id="L46">        return new UserDetailsImpl(user);</span>
+    }
+    
+    public static long getSerialversionuid() {
+<span class="nc" id="L50">        return serialVersionUID;</span>
+    }
+
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<span class="nc" id="L55">        return privileges;</span>
+    }
+
+    @Override
+    public String getPassword() {
+<span class="nc" id="L60">        return password;</span>
+    }
+
+    @Override
+    public String getUsername() {
+<span class="nc" id="L65">        return username;</span>
+    }
+
+    public String getTableId() {
+<span class="nc" id="L69">        return tableId;</span>
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+<span class="nc" id="L74">        return true;</span>
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+<span class="nc" id="L79">        return true;</span>
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+<span class="nc" id="L84">        return true;</span>
+    }
+
+    @Override
+    public boolean isEnabled() {
+<span class="nc" id="L89">        return true;</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (this == o)</span>
+<span class="nc" id="L95">            return true;</span>
+<span class="nc bnc" id="L96" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass())</span>
+<span class="nc" id="L97">            return false;</span>
+<span class="nc" id="L98">        UserDetailsImpl user = (UserDetailsImpl) o;</span>
+<span class="nc" id="L99">        return Objects.equals(username, user.username);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

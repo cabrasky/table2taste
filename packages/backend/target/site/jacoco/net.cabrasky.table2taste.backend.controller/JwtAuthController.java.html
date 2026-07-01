@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtAuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.controller</a> &gt; <span class="el_source">JwtAuthController.java</span></div><h1>JwtAuthController.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.controller;
+
+import net.cabrasky.table2taste.backend.jwt.JwtResponse;
+import net.cabrasky.table2taste.backend.jwt.JwtUtils;
+import net.cabrasky.table2taste.backend.jwt.UserDetailsImpl;
+import net.cabrasky.table2taste.backend.jwt.dto.AuthRequestDTO;
+import net.cabrasky.table2taste.backend.model.User;
+import net.cabrasky.table2taste.backend.modelDto.UserDTO;
+import net.cabrasky.table2taste.backend.service.UserService;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+<span class="fc" id="L28">public class JwtAuthController {</span>
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private UserService userService;
+    	
+	@Value(&quot;${app.default.tablePassword}&quot;)
+    private String defaultTablePassword;
+
+
+    @PostMapping(&quot;/login&quot;)
+    public ResponseEntity&lt;JwtResponse&gt; authenticateUser(@RequestBody AuthRequestDTO loginRequest) {
+<span class="nc" id="L45">    	userService.getById(loginRequest.username).ifPresent((u) -&gt; {</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">    		if(u.getGroups() != null &amp;&amp; u.getGroups().stream().anyMatch(group -&gt; group.getId().equals(&quot;table&quot;)))</span>
+<span class="nc" id="L47">    		loginRequest.password = defaultTablePassword;</span>
+<span class="nc" id="L48">    	});</span>
+<span class="nc" id="L49">        Authentication authentication = authenticationManager.authenticate(</span>
+                new UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password));
+<span class="nc" id="L51">        SecurityContextHolder.getContext().setAuthentication(authentication);</span>
+<span class="nc" id="L52">        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();</span>
+<span class="nc" id="L53">        String jwt = jwtUtils.generateJwtToken(authentication);</span>
+<span class="nc" id="L54">        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername()));</span>
+    }
+
+    @PostMapping(&quot;/register&quot;)
+    @PreAuthorize(&quot;hasAuthority('REGISTER_USERS')&quot;)
+    public ResponseEntity&lt;String&gt; registerUser(@RequestBody UserDTO registerRequest) {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (userService.existsById(registerRequest.username)) {</span>
+<span class="nc" id="L61">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Username is already taken!&quot;);</span>
+        }
+<span class="nc" id="L63">        userService.create(registerRequest);</span>
+<span class="nc" id="L64">        return ResponseEntity.status(HttpStatus.CREATED).body(&quot;User registered successfully&quot;);</span>
+    }
+
+    @GetMapping(&quot;/userInfo&quot;)
+    public ResponseEntity&lt;User&gt; getUserInfo() {
+<span class="nc" id="L69">        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="nc" id="L70">        String currentPrincipalName = authentication.getName();</span>
+<span class="nc" id="L71">        Optional&lt;User&gt; user = userService.getById(currentPrincipalName);</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        return user.isPresent() </span>
+<span class="nc" id="L73">            ? ResponseEntity.ok(user.get())</span>
+<span class="nc" id="L74">            : new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED);</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

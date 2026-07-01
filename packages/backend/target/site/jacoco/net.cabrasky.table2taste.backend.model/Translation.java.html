@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Translation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.model</a> &gt; <span class="el_source">Translation.java</span></div><h1>Translation.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = &quot;translation&quot;)
+<span class="fc" id="L14">public class Translation implements ModelInterface&lt;Long&gt; {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
+    @Column(name = &quot;id&quot;)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = &quot;language_id&quot;)
+    private Language language;
+
+    @Column(name = &quot;translation_key&quot;)
+    private String translationKey;
+
+    @Column(name = &quot;value&quot;)
+    private String value;
+
+    // Getters and setters
+
+    public Long getId() {
+<span class="nc" id="L35">        return id;</span>
+    }
+
+    public Language getLanguage() {
+<span class="nc" id="L39">        return language;</span>
+    }
+
+    public void setLanguage(Language language) {
+<span class="fc" id="L43">        this.language = language;</span>
+<span class="fc" id="L44">    }</span>
+
+    public String getTranslationKey() {
+<span class="nc" id="L47">        return translationKey;</span>
+    }
+
+    public void setTranslationKey(String translationKey) {
+<span class="fc" id="L51">        this.translationKey = translationKey;</span>
+<span class="fc" id="L52">    }</span>
+
+    public String getValue() {
+<span class="nc" id="L55">        return value;</span>
+    }
+
+    public void setValue(String value) {
+<span class="fc" id="L59">        this.value = value;</span>
+<span class="fc" id="L60">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

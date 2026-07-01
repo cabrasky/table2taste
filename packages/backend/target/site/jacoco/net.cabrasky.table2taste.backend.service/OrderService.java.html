@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.service</a> &gt; <span class="el_source">OrderService.java</span></div><h1>OrderService.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.service;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
+
+import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import net.cabrasky.table2taste.backend.mappers.OrderMapper;
+import net.cabrasky.table2taste.backend.model.MenuItem;
+import net.cabrasky.table2taste.backend.model.Order;
+import net.cabrasky.table2taste.backend.model.OrderItemQuantity;
+import net.cabrasky.table2taste.backend.model.Service;
+import net.cabrasky.table2taste.backend.model.Table;
+import net.cabrasky.table2taste.backend.modelDto.OrderDTO;
+import net.cabrasky.table2taste.backend.repository.OrderRepository;
+import net.cabrasky.table2taste.backend.repository.ServiceRepository;
+import net.cabrasky.table2taste.backend.repository.TableRepository;
+import net.cabrasky.table2taste.backend.repository.UserRepository;
+import net.cabrasky.table2taste.backend.websocket.TicketPrinterOrderWebSocketHandler;
+
+@org.springframework.stereotype.Service
+<span class="fc" id="L27">public class OrderService {</span>
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TableRepository tableRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ServiceRepository serviceRepository;
+
+    @Autowired
+    private OrderMapper orderMapper;
+    
+    @Autowired
+    private TicketPrinterOrderWebSocketHandler ticketPrinterOrderWebSocketHandler;
+
+    public Table findTableForUserOrById(String username, Long tableId) {
+<span class="nc" id="L48">        Optional&lt;Table&gt; optTable = tableRepository.findByUsername(username).stream().findFirst();</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">        if (optTable.isEmpty() &amp;&amp; tableId != null) {</span>
+<span class="nc" id="L50">            optTable = tableRepository.findById(tableId);</span>
+        }
+<span class="nc" id="L52">        return optTable.orElse(null);</span>
+    }
+
+    public JsonObject createTicketData(Order order) {
+<span class="nc" id="L56">        JsonObject ticketData = new JsonObject();</span>
+<span class="nc" id="L57">        ticketData.addProperty(&quot;current_date&quot;, LocalDate.now().toString());</span>
+<span class="nc" id="L58">        ticketData.addProperty(&quot;current_time&quot;, LocalTime.now().toString());</span>
+<span class="nc" id="L59">        ticketData.addProperty(&quot;table_id&quot;, order.getService().getTable().getId());</span>
+
+<span class="nc" id="L61">        JsonArray items = new JsonArray();</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        for (OrderItemQuantity orderItem : order.getOrderItemQuantities()) {</span>
+<span class="nc" id="L63">            JsonObject item = new JsonObject();</span>
+<span class="nc" id="L64">            MenuItem menuItem = orderItem.getOrderItem().getMenuItem();</span>
+<span class="nc" id="L65">            item.addProperty(&quot;name&quot;, getMenuItemName(menuItem));</span>
+<span class="nc" id="L66">            item.addProperty(&quot;quantity&quot;, orderItem.getQuantity());</span>
+<span class="nc" id="L67">            item.addProperty(&quot;annotations&quot;, orderItem.getOrderItem().getAnnotations());</span>
+<span class="nc" id="L68">            items.add(item);</span>
+<span class="nc" id="L69">        }</span>
+<span class="nc" id="L70">        ticketData.add(&quot;items&quot;, items);</span>
+<span class="nc" id="L71">        return ticketData;</span>
+    }
+
+    private String getMenuItemName(MenuItem menuItem) {
+<span class="nc" id="L75">        return menuItem.getTranslations().stream()</span>
+<span class="nc bnc" id="L76" title="All 4 branches missed.">                .filter(t -&gt; t.getLanguage().getId().equals(&quot;en&quot;) &amp;&amp; t.getTranslationKey().equals(&quot;name&quot;))</span>
+<span class="nc" id="L77">                .findFirst()</span>
+<span class="nc" id="L78">                .orElseThrow(() -&gt; new RuntimeException(&quot;Translation not found&quot;))</span>
+<span class="nc" id="L79">                .getValue();</span>
+    }
+    
+    public Order createOrder(String username, Table table, OrderDTO orderDto) throws BadRequestException {
+<span class="nc" id="L83">        Order order = orderMapper.mapOrderDTOToOrder(orderDto);</span>
+<span class="nc" id="L84">        order.setUser(userRepository.findById(username).get());</span>
+<span class="nc" id="L85">        Service service = table.getLastService();</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if(service == null) {</span>
+<span class="nc" id="L87">        	service = new Service();</span>
+<span class="nc" id="L88">        	service.setTable(table);</span>
+<span class="nc" id="L89">        	table.setLastService(service);</span>
+<span class="nc" id="L90">        	serviceRepository.save(service);</span>
+<span class="nc" id="L91">        	tableRepository.save(table);</span>
+        }
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if(!service.getIsOpen().booleanValue()) {</span>
+<span class="nc" id="L94">            throw new BadRequestException(&quot;service clossed&quot;);</span>
+        }
+        
+<span class="nc" id="L97">        order.setService(service);</span>
+<span class="nc" id="L98">        order.getOrderItemQuantities().stream().forEach(orderItemQuantity -&gt; {orderItemQuantity.setOrder(order);});</span>
+<span class="nc" id="L99">        Order o = orderRepository.save(order);</span>
+
+<span class="nc" id="L101">        JsonObject ticketData = createTicketData(o);</span>
+<span class="nc" id="L102">        ticketPrinterOrderWebSocketHandler.broadcast(ticketData.toString());</span>
+<span class="nc" id="L103">        return order;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.configuration</a> &gt; <span class="el_source">DataLoader.java</span></div><h1>DataLoader.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.configuration;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import net.cabrasky.table2taste.backend.model.*;
+import net.cabrasky.table2taste.backend.repository.*;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+<span class="fc" id="L28">public class DataLoader {</span>
+
+<span class="fc" id="L30">	private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);</span>
+	private static final String DATA_FILE_PATH = &quot;defaultData.json&quot;;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private LanguageRepository languageRepository;
+
+	@Autowired
+	private AllergenRepository allergenRepository;
+
+	@Autowired
+	private MenuItemRepository menuItemRepository;
+
+	@Autowired
+	private PrivilegeRepository privilegeRepository;
+
+	@Autowired
+	private GroupRepository groupRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private TableRepository tableRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Value(&quot;${app.default.tablePassword}&quot;)
+    private String defaultTablePassword;
+
+	@Bean
+	public ApplicationRunner initData() {
+<span class="fc" id="L65">		return args -&gt; {</span>
+<span class="fc" id="L66">			try (FileReader fileReader = new FileReader(DATA_FILE_PATH)) {</span>
+<span class="fc" id="L67">				JsonObject defaultData = JsonParser.parseReader(fileReader).getAsJsonObject();</span>
+
+<span class="fc" id="L69">				loadDataIfEmpty(languageRepository, () -&gt; loadDefaultLanguages(defaultData));</span>
+<span class="fc" id="L70">				loadDataIfEmpty(allergenRepository, () -&gt; loadDefaultAllergens(defaultData));</span>
+<span class="fc" id="L71">				loadDataIfEmpty(privilegeRepository, () -&gt; loadDefaultPrivileges(defaultData));</span>
+<span class="fc" id="L72">				loadDataIfEmpty(groupRepository, () -&gt; loadDefaultGroups(defaultData));</span>
+<span class="fc" id="L73">				loadDataIfEmpty(userRepository, () -&gt; loadDefaultUsers(defaultData));</span>
+<span class="fc" id="L74">				loadDataIfEmpty(tableRepository, () -&gt; loadDefaultTables(defaultData));</span>
+<span class="fc" id="L75">				loadDataIfEmpty(categoryRepository, () -&gt; loadDefaultCategories(defaultData));</span>
+<span class="nc" id="L76">			} catch (IOException e) {</span>
+<span class="nc" id="L77">				logger.error(&quot;Error reading &quot; + DATA_FILE_PATH, e);</span>
+<span class="fc" id="L78">			}</span>
+<span class="fc" id="L79">		};</span>
+	}
+
+	private &lt;T&gt; void loadDataIfEmpty(CrudRepository&lt;T, ?&gt; repository, Runnable loadFunction) {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">		if (repository.count() == 0) {</span>
+<span class="fc" id="L84">			loadFunction.run();</span>
+		} else {
+<span class="nc" id="L86">			logger.info(&quot;{} already exist. Skipping data loading.&quot;, repository.getClass().getSimpleName());</span>
+		}
+<span class="fc" id="L88">	}</span>
+
+	@Transactional
+	public void loadDefaultLanguages(JsonObject data) {
+<span class="fc" id="L92">		data.get(&quot;languages&quot;).getAsJsonArray().forEach(languageElement -&gt; {</span>
+<span class="fc" id="L93">			Language language = new Language();</span>
+<span class="fc" id="L94">			language.setId(languageElement.getAsString());</span>
+<span class="fc" id="L95">			languageRepository.save(language);</span>
+<span class="fc" id="L96">		});</span>
+<span class="fc" id="L97">	}</span>
+
+	@Transactional
+	public void loadDefaultAllergens(JsonObject data) {
+<span class="fc" id="L101">		data.get(&quot;allergens&quot;).getAsJsonArray().forEach(allergenElement -&gt; {</span>
+<span class="fc" id="L102">			allergenRepository.save(getAllergen(allergenElement.getAsJsonObject()));</span>
+<span class="fc" id="L103">		});</span>
+<span class="fc" id="L104">	}</span>
+
+	@Transactional
+	public void loadDefaultPrivileges(JsonObject data) {
+<span class="fc" id="L108">		data.get(&quot;privileges&quot;).getAsJsonArray().forEach(privilegeElement -&gt; {</span>
+<span class="fc" id="L109">			Privilege privilege = new Privilege();</span>
+<span class="fc" id="L110">			privilege.setId(privilegeElement.getAsString());</span>
+<span class="fc" id="L111">			privilegeRepository.save(privilege);</span>
+<span class="fc" id="L112">		});</span>
+<span class="fc" id="L113">	}</span>
+
+	@Transactional
+	public void loadDefaultGroups(JsonObject data) {
+<span class="fc" id="L117">		data.get(&quot;groups&quot;).getAsJsonArray().forEach(groupElement -&gt; {</span>
+<span class="fc" id="L118">			saveGroup(groupElement.getAsJsonObject());</span>
+<span class="fc" id="L119">		});</span>
+<span class="fc" id="L120">	}</span>
+
+	@Transactional
+	public void loadDefaultUsers(JsonObject data) {
+<span class="fc" id="L124">		data.get(&quot;users&quot;).getAsJsonArray().forEach(userElement -&gt; {</span>
+<span class="fc" id="L125">			saveUser(userElement.getAsJsonObject());</span>
+<span class="fc" id="L126">		});</span>
+<span class="fc" id="L127">	}</span>
+
+	@Transactional
+	public void loadDefaultTables(JsonObject data) {
+<span class="fc" id="L131">		data.get(&quot;tables&quot;).getAsJsonArray().forEach(tableElement -&gt; {</span>
+<span class="fc" id="L132">			saveTable(tableElement.getAsJsonObject());</span>
+<span class="fc" id="L133">		});</span>
+<span class="fc" id="L134">	}</span>
+
+	@Transactional
+	public void loadDefaultCategories(JsonObject data) {
+<span class="fc" id="L138">		data.get(&quot;categories&quot;).getAsJsonArray().forEach(categoryElement -&gt; {</span>
+<span class="fc" id="L139">			saveCategory(categoryElement.getAsJsonObject());</span>
+<span class="fc" id="L140">		});</span>
+<span class="fc" id="L141">	}</span>
+
+	private Allergen getAllergen(JsonObject allergenObject) {
+<span class="fc" id="L144">		Allergen allergen = new Allergen();</span>
+<span class="fc" id="L145">		allergen.setId(allergenObject.get(&quot;id&quot;).getAsString());</span>
+<span class="fc" id="L146">		allergen.setInclusive(allergenObject.get(&quot;inclusive&quot;).getAsBoolean());</span>
+<span class="fc" id="L147">		allergen.setTranslations(getTranslations(allergenObject));</span>
+<span class="fc" id="L148">		return allergen;</span>
+	}
+
+	private void saveGroup(JsonObject groupObject) {
+<span class="fc" id="L152">		Group group = new Group();</span>
+<span class="fc" id="L153">		group.setId(groupObject.get(&quot;id&quot;).getAsString());</span>
+<span class="fc" id="L154">		group.setColor(groupObject.get(&quot;color&quot;).getAsString());</span>
+<span class="fc" id="L155">		group.setTranslations(getTranslations(groupObject));</span>
+<span class="fc" id="L156">		group.setPrivileges(getPrivileges(groupObject));</span>
+<span class="fc" id="L157">		groupRepository.save(group);</span>
+<span class="fc" id="L158">	}</span>
+
+	private void saveUser(JsonObject userObject) {
+<span class="fc" id="L161">		User user = new User();</span>
+<span class="fc" id="L162">		user.setUsername(userObject.get(&quot;username&quot;).getAsString());</span>
+<span class="fc" id="L163">		user.setName(userObject.get(&quot;name&quot;).getAsString());</span>
+<span class="fc" id="L164">		user.setPhotoUrl(userObject.get(&quot;photo_url&quot;).getAsString());</span>
+<span class="fc" id="L165">		user.setPassword(passwordEncoder.encode(userObject.get(&quot;password&quot;).getAsString()));</span>
+<span class="fc" id="L166">		user.setGroups(getGroups(userObject));</span>
+<span class="fc" id="L167">		userRepository.save(user);</span>
+<span class="fc" id="L168">	}</span>
+
+	private void saveTable(JsonObject tableObject) {
+<span class="fc" id="L171">		Table table = new Table();</span>
+<span class="fc" id="L172">		table.setId(tableObject.get(&quot;id&quot;).getAsLong());</span>
+<span class="fc" id="L173">		table.setCapacity(tableObject.get(&quot;capacity&quot;).getAsInt());</span>
+<span class="fc" id="L174">		table.setUser(new User() {{</span>
+<span class="fc" id="L175">			setName(String.format(&quot;Table %d&quot;, table.getId()));</span>
+<span class="fc" id="L176">			setPassword(passwordEncoder.encode(defaultTablePassword));</span>
+<span class="fc" id="L177">			setUsername(getName());</span>
+<span class="fc" id="L178">			setGroups(Set.of(groupRepository.findById(&quot;table&quot;).get()));</span>
+<span class="fc" id="L179">		}});</span>
+<span class="fc" id="L180">		tableRepository.save(table);</span>
+<span class="fc" id="L181">	}</span>
+
+	private void saveCategory(JsonObject categoryObject) {
+<span class="fc" id="L184">		Set&lt;Translation&gt; categoryTranslations = getTranslations(categoryObject);</span>
+<span class="fc" id="L185">		String categoryId = categoryObject.get(&quot;id&quot;).getAsString();</span>
+<span class="fc" id="L186">		Category category = new Category();</span>
+<span class="fc" id="L187">		category.setId(categoryId);</span>
+<span class="fc" id="L188">		category.setMediaUrl(&quot;&quot;);</span>
+<span class="fc" id="L189">		category.setMenuPriority(categoryObject.get(&quot;menuPriority&quot;).getAsInt());</span>
+<span class="fc" id="L190">		category.setTranslations(categoryTranslations);</span>
+<span class="fc" id="L191">		categoryRepository.save(category);</span>
+<span class="fc" id="L192">		saveMenuItems(categoryObject, categoryId);</span>
+<span class="fc" id="L193">	}</span>
+
+	private void saveMenuItems(JsonObject categoryObject, String categoryId) {
+<span class="fc" id="L196">		JsonArray menuItemArray = categoryObject.getAsJsonArray(&quot;menuItems&quot;);</span>
+<span class="fc" id="L197">		menuItemArray.forEach(menuItemElement -&gt; {</span>
+<span class="fc" id="L198">			MenuItem menuItem = getMenuItem(menuItemElement.getAsJsonObject());</span>
+<span class="fc" id="L199">			menuItem.setCategoryId(categoryId);</span>
+<span class="fc" id="L200">			menuItemRepository.save(menuItem);</span>
+<span class="fc" id="L201">		});</span>
+<span class="fc" id="L202">	}</span>
+
+	private MenuItem getMenuItem(JsonObject menuItemObject) {
+<span class="fc" id="L205">		MenuItem menuItem = new MenuItem();</span>
+<span class="fc" id="L206">		menuItem.setId(menuItemObject.get(&quot;id&quot;).getAsString());</span>
+<span class="fc" id="L207">		menuItem.setPrice(menuItemObject.get(&quot;price&quot;).getAsDouble());</span>
+<span class="fc" id="L208">		menuItem.setMediaUrl(menuItemObject.get(&quot;mediaUrl&quot;).getAsString());</span>
+<span class="fc" id="L209">		menuItem.setTranslations(getTranslations(menuItemObject));</span>
+<span class="fc" id="L210">		menuItem.setAllergens(getAllergens(menuItemObject));</span>
+<span class="fc" id="L211">		return menuItem;</span>
+	}
+
+	private Set&lt;Allergen&gt; getAllergens(JsonObject object) {
+<span class="fc" id="L215">		Set&lt;Allergen&gt; allergens = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L216">		object.getAsJsonArray(&quot;allergens&quot;).forEach(allergenElement -&gt; {</span>
+<span class="fc" id="L217">			allergenRepository.findById(allergenElement.getAsString()).ifPresent(allergens::add);</span>
+<span class="fc" id="L218">		});</span>
+<span class="fc" id="L219">		return allergens;</span>
+	}
+
+	private Set&lt;Privilege&gt; getPrivileges(JsonObject object) {
+<span class="fc" id="L223">		Set&lt;Privilege&gt; privileges = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L224">		object.getAsJsonArray(&quot;privileges&quot;).forEach(privilegeElement -&gt; {</span>
+<span class="fc" id="L225">			privilegeRepository.findById(privilegeElement.getAsString()).ifPresent(privileges::add);</span>
+<span class="fc" id="L226">		});</span>
+<span class="fc" id="L227">		return privileges;</span>
+	}
+
+	private Set&lt;Group&gt; getGroups(JsonObject object) {
+<span class="fc" id="L231">		Set&lt;Group&gt; groups = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L232">		object.getAsJsonArray(&quot;groups&quot;).forEach(groupElement -&gt; {</span>
+<span class="fc" id="L233">			groupRepository.findById(groupElement.getAsString()).ifPresent(groups::add);</span>
+<span class="fc" id="L234">		});</span>
+<span class="fc" id="L235">		return groups;</span>
+	}
+
+	private Set&lt;Translation&gt; getTranslations(JsonObject object) {
+<span class="fc" id="L239">		Set&lt;Translation&gt; translations = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L240">		JsonObject translationsObject = object.getAsJsonObject(&quot;translations&quot;);</span>
+<span class="fc" id="L241">		translationsObject.entrySet().forEach(entry -&gt; {</span>
+<span class="fc" id="L242">			String languageId = entry.getKey();</span>
+<span class="fc" id="L243">			JsonObject languageTranslations = entry.getValue().getAsJsonObject();</span>
+<span class="fc" id="L244">			Language language = languageRepository.findById(languageId)</span>
+<span class="pc" id="L245">					.orElseThrow(() -&gt; new IllegalArgumentException(&quot;Language not found: &quot; + languageId));</span>
+<span class="fc" id="L246">			languageTranslations.entrySet().forEach(translationEntry -&gt; {</span>
+<span class="fc" id="L247">				Translation translation = new Translation();</span>
+<span class="fc" id="L248">				translation.setTranslationKey(translationEntry.getKey());</span>
+<span class="fc" id="L249">				translation.setValue(translationEntry.getValue().getAsString());</span>
+<span class="fc" id="L250">				translation.setLanguage(language);</span>
+<span class="fc" id="L251">				translations.add(translation);</span>
+<span class="fc" id="L252">			});</span>
+<span class="fc" id="L253">		});</span>
+<span class="fc" id="L254">		return translations;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,27 @@
+{"properties": [
+  {
+    "name": "app.jwt.secret",
+    "type": "java.lang.String",
+    "description": "Private key used for signing JWT Tokens"
+  },
+  {
+    "name": "app.jwt.expiration-ms",
+    "type": "java.lang.Integer",
+    "description": "A description for 'app.jwtExpirationMs'"
+  },
+  {
+    "name": "app.default.language",
+    "type": "java.lang.String",
+    "description": "A description for 'app.default.language'"
+  },
+  {
+    "name": "app.default.filePath",
+    "type": "java.lang.String",
+    "description": "A description for 'app.default.filePath'"
+  },
+  {
+    "name": "app.default.tablePassword",
+    "type": "java.lang.String",
+    "description": "A description for 'app.default.tablePassword'"
+  }
+]}

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MenuItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.model</a> &gt; <span class="el_source">MenuItem.java</span></div><h1>MenuItem.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.model;
+
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = &quot;menu_item&quot;)
+<span class="fc" id="L20">public class MenuItem implements ModelInterface&lt;String&gt; {</span>
+
+    @Id
+    @Column(name = &quot;id&quot;)
+    private String id;
+
+    @Column(name = &quot;price&quot;)
+    private double price;
+
+    @Column(name = &quot;media_url&quot;)
+    private String mediaUrl;
+
+    @Column(name = &quot;category_id&quot;)
+    private String categoryId;
+
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = &quot;category_id&quot;, updatable = false, insertable = false)
+    private Category category;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = &quot;menu_item_translation&quot;, joinColumns = @JoinColumn(name = &quot;menu_item_id&quot;), inverseJoinColumns = @JoinColumn(name = &quot;translation_id&quot;))
+    private Set&lt;Translation&gt; translations;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = &quot;menu_item_allergen&quot;, joinColumns = @JoinColumn(name = &quot;menu_item_id&quot;), inverseJoinColumns = @JoinColumn(name = &quot;allergen_id&quot;))
+    private Set&lt;Allergen&gt; allergens;
+
+    // Getters and setters
+
+    public String getId() {
+<span class="nc" id="L51">        return id;</span>
+    }
+    
+	public void setId(String id) {
+<span class="fc" id="L55">		this.id = id;</span>
+<span class="fc" id="L56">	}</span>
+
+    public double getPrice() {
+<span class="nc" id="L59">        return price;</span>
+    }
+
+    public void setPrice(double price) {
+<span class="fc" id="L63">        this.price = price;</span>
+<span class="fc" id="L64">    }</span>
+
+    public String getMediaUrl() {
+<span class="nc" id="L67">        return mediaUrl;</span>
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+<span class="fc" id="L71">        this.mediaUrl = mediaUrl;</span>
+<span class="fc" id="L72">    }</span>
+
+    public String getCategoryId() {
+<span class="nc" id="L75">        return categoryId;</span>
+    }
+
+    public void setCategoryId(String categoryId) {
+<span class="fc" id="L79">        this.categoryId = categoryId;</span>
+<span class="fc" id="L80">    }</span>
+
+    public Category getCategory() {
+<span class="nc" id="L83">        return this.category;</span>
+    }
+
+    public Set&lt;Translation&gt; getTranslations() {
+<span class="nc" id="L87">        return translations;</span>
+    }
+
+    public void setTranslations(Set&lt;Translation&gt; translations) {
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (this.translations != null) {</span>
+<span class="nc" id="L92">            this.translations.clear();</span>
+<span class="nc" id="L93">            this.translations.addAll(translations);</span>
+        } else {
+<span class="fc" id="L95">            this.translations = translations;</span>
+        }
+<span class="fc" id="L97">    }</span>
+
+    public Set&lt;Allergen&gt; getAllergens() {
+<span class="nc" id="L100">        return allergens;</span>
+    }
+
+    public void setAllergens(Set&lt;Allergen&gt; allergens) {
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if (this.allergens != null) {</span>
+<span class="nc" id="L105">            this.allergens.clear();</span>
+<span class="nc" id="L106">            this.allergens.addAll(allergens);</span>
+        } else {
+<span class="fc" id="L108">            this.allergens = allergens;</span>
+        }
+<span class="fc" id="L110">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

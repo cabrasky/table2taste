@@ -49,9 +49,6 @@ const MenuItemListedElement: React.FC<Props> = ({ menuItem, onAddToCart }) => {
             </IconButton>
           </Tooltip>
         </div>
-        <div className="menu-item-price-badge">
-          €{menuItem.price.toFixed(2)}
-        </div>
       </div>
       <div className="menu-item-card-content">
         <div className="menu-item-card-title">
@@ -59,6 +56,9 @@ const MenuItemListedElement: React.FC<Props> = ({ menuItem, onAddToCart }) => {
         </div>
         <div className="menu-item-card-ingredients">
           <Translate translationKey={"description"} dataSet={menuItem.translations!} />
+        </div>
+        <div className="menu-item-card-price">
+          €{menuItem.price.toFixed(2)}
         </div>
         {menuItem.allergens && menuItem.allergens.length > 0 && (
           <div className="menu-item-card-allergens">

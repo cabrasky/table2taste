@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.service;
+
+import net.cabrasky.table2taste.backend.model.User;
+import net.cabrasky.table2taste.backend.modelDto.UserDTO;
+import net.cabrasky.table2taste.backend.repository.GroupRepository;
+import net.cabrasky.table2taste.backend.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import java.util.HashSet;
+import java.util.Optional;
+
+@Service
+<span class="fc" id="L18">public class UserService extends AbstractModificableService&lt;User, UserDTO, String, UserRepository&gt; {</span>
+	@Autowired
+	private GroupRepository groupRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public User create(UserDTO element) {
+<span class="nc" id="L27">		element.password = passwordEncoder.encode(element.password);</span>
+<span class="nc" id="L28">		User el = objectMapper.convertValue(element, this.getModelClass());</span>
+<span class="nc" id="L29">		el.setGroups(</span>
+<span class="nc" id="L30">				new HashSet&lt;&gt;(element.groups.stream().map(group -&gt; groupRepository.findById(group.id).get()).toList()));</span>
+<span class="nc" id="L31">		return repository.save(el);</span>
+	}
+
+	@Override
+	public boolean update(String id, UserDTO element) {
+<span class="nc" id="L36">		Optional&lt;User&gt; optionalEl = repository.findById(id);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">		if (!optionalEl.isPresent()) {</span>
+<span class="nc" id="L38">			return false;</span>
+		}
+<span class="nc" id="L40">		User el = optionalEl.get();</span>
+
+		try {
+<span class="nc" id="L43">			objectMapper.updateValue(el, element);</span>
+<span class="nc" id="L44">			el.setGroups(new HashSet&lt;&gt;(</span>
+<span class="nc" id="L45">					element.groups.stream().map(group -&gt; groupRepository.findById(group.id).get()).toList()));</span>
+<span class="nc" id="L46">			repository.save(el);</span>
+<span class="nc" id="L47">		} catch (JsonMappingException e) {</span>
+<span class="nc" id="L48">			System.err.println(e.getStackTrace());</span>
+<span class="nc" id="L49">			return false;</span>
+<span class="nc" id="L50">		}</span>
+<span class="nc" id="L51">		return true;</span>
+	}
+
+	@Override
+	protected Class&lt;User&gt; getModelClass() {
+<span class="nc" id="L56">		return User.class;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

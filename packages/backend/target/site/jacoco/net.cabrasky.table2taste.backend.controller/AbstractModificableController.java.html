@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractModificableController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">table2taste-backend_springboot</a> &gt; <a href="index.source.html" class="el_package">net.cabrasky.table2taste.backend.controller</a> &gt; <span class="el_source">AbstractModificableController.java</span></div><h1>AbstractModificableController.java</h1><pre class="source lang-java linenums">package net.cabrasky.table2taste.backend.controller;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import net.cabrasky.table2taste.backend.model.ModelInterface;
+import net.cabrasky.table2taste.backend.modelDto.ModelDTOInterface;
+import net.cabrasky.table2taste.backend.service.AbstractModificableService;
+
+import java.util.List;
+
+<span class="fc" id="L13">public abstract class AbstractModificableController&lt;T extends ModelInterface&lt;I&gt;, DTO extends ModelDTOInterface&lt;I&gt;, I, S extends AbstractModificableService&lt;T, DTO, I, ? extends JpaRepository&lt;T, I&gt;&gt;&gt; extends AbstractController&lt;T, I, S&gt; {</span>
+
+    @PostMapping
+    public ResponseEntity&lt;T&gt; create(@RequestBody DTO entity){
+<span class="nc" id="L17">        return new ResponseEntity&lt;&gt;(service.create(entity), HttpStatus.CREATED);</span>
+    }
+
+    @PutMapping(params = {&quot;id&quot;})
+    public boolean update(@RequestParam(name=&quot;id&quot;) I id, @RequestBody DTO updates) {
+<span class="nc" id="L22">        return service.update(id, updates);</span>
+    }
+
+    @DeleteMapping(params = {&quot;id&quot;})
+    public void delete(@RequestParam(name=&quot;id&quot;) I id) {
+<span class="nc" id="L27">        service.delete(id);</span>
+<span class="nc" id="L28">    }</span>
+
+    @DeleteMapping(params= {&quot;ids&quot;})
+    public void deleteAll(@RequestParam(name=&quot;ids&quot;) List&lt;I&gt; ids) {
+<span class="nc" id="L32">        service.deleteAll(ids);</span>
+<span class="nc" id="L33">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
