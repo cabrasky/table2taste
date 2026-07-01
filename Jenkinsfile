@@ -269,9 +269,7 @@ pipeline {
     post {
         always {
             script {
-                node('built-in') {
-                    sh 'docker image prune -f || true'
-                }
+                sh 'docker image prune -f || true'
             }
         }
         failure {
