@@ -176,7 +176,11 @@ pipeline {
 
     post {
         always {
-            sh 'docker image prune -f || true'
+            script {
+                node('built-in') {
+                    sh 'docker image prune -f || true'
+                }
+            }
         }
         failure {
             echo '❌ Pipeline failed — check logs'
