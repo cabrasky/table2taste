@@ -2,5 +2,5 @@ projectKey=table2taste
 serverUrl=https://sonar.cabrasky.net
 serverVersion=25.3.0.104237
 dashboardUrl=https://sonar.cabrasky.net/dashboard?id=table2taste
-ceTaskId=ad9ddc77-d5bb-4228-9dfb-df96c0d8e8bf
-ceTaskUrl=https://sonar.cabrasky.net/api/ce/task?id=ad9ddc77-d5bb-4228-9dfb-df96c0d8e8bf
+ceTaskId=d24a002e-f51d-42c8-8870-aea24b8dbdc5
+ceTaskUrl=https://sonar.cabrasky.net/api/ce/task?id=d24a002e-f51d-42c8-8870-aea24b8dbdc5

@@ -114,10 +114,10 @@ const MenuView: React.FC<Props> = ({ admin = false }) => {
             <div className="menu-top-bar">
                 <Button
                     className="allergen-selector-btn"
-                    startIcon={<AllergenIcon allergenId="" />}
+                    startIcon={<img src="/allergen-icon.svg" alt="allergens" className="allergen-icon" onError={(e)=>{const t=e.target as HTMLImageElement;t.style.display="none"}} />}
                     onClick={() => setFilterDrawerOpen(true)}
                 >
-                    <Translate translationKey="gui.allergen.select" />
+                    Select Allergens
                     {selectedAllergens.length > 0 && (
                         <Badge badgeContent={selectedAllergens.length} color="primary" className="allergen-badge" />
                     )}
