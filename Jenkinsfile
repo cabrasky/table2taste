@@ -339,8 +339,12 @@ def deployPreview(subdomain) {
                 "\$f" > /tmp/k8s-preview-${subdomain}/\$(basename "\$f")
         done
 
-        # Deploy preview
-        kubectl apply -f /tmp/k8s-preview-${subdomain}/namespace.yaml
+        # Deploy preview — wait if namespace is still terminating from previous build
+        kubectl apply -f /tmp/k8s-preview-${subdomain}/namespace.yaml 2>&1 || {
+            echo "Namespace creation failed (likely still terminating), waiting..."
+            sleep 10
+            kubectl apply -f /tmp/k8s-preview-${subdomain}/namespace.yaml
+        }
         sleep 2
         kubectl apply -f /tmp/k8s-preview-${subdomain}/db.yaml
         kubectl apply -f /tmp/k8s-preview-${subdomain}/backend.yaml
