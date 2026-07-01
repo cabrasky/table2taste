@@ -4,7 +4,7 @@ import MenuView from "../pages/MenuView/MenuView";
 import { MenuItemFormPage } from "../pages/admin/MenuItem/MenuItemFormPage";
 import { MainPageLayout } from "../pages/MainPageLayout";
 import CartPage from "../pages/Cart/CartPage";
-import LoginForm from "./Login/LoginForm";
+import LoginForm from "./login/LoginForm";
 import { useAuth } from "../contexts/AuthContext";
 import ErrorPage from "../pages/ErrorPage";
 import ViewReceiptPage from "../pages/ViewReceipt/ViewReceiptPage";
