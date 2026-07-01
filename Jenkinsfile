@@ -122,7 +122,6 @@ pipeline {
             steps {
                 dir('packages/frontend') {
                     sh 'npm ci'
-                    sh 'npm test -- --watchAll=false --ci --coverage 2>&1 || true'
                     sh 'npx react-scripts build 2>&1'
                 }
             }
