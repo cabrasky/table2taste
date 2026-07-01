@@ -54,7 +54,7 @@ pipeline {
                 script {
                     // Read version from frontend package.json
                     def pkg = sh(
-                        script: 'cat packages/frontend/package.json | python3 -c "import sys,json; print(json.load(sys.stdin)[\"version\"])"',
+                        script: "cat packages/frontend/package.json | python3 -c 'import sys,json; print(json.load(sys.stdin)[\"version\"])'",
                         returnStdout: true
                     ).trim()
                     def gitSha = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
