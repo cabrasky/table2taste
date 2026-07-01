@@ -187,7 +187,7 @@ pipeline {
             steps {
                 dir('packages/frontend') {
                     sh 'npm ci'
-                    sh 'npx react-scripts build 2>&1'
+                    sh 'CI=false npx react-scripts build 2>&1'
                 }
             }
             post {
