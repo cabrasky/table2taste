@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="001-base-tables" author="table2taste">
+        <comment>Core tables: language, translation, privilege, user, group, table, allergen, category, menu_item</comment>
+
+        <!-- language -->
+        <createTable tableName="language">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="required" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+
+        <!-- translation -->
+        <createTable tableName="translation">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="language_id" type="VARCHAR(255)"/>
+            <column name="translation_key" type="VARCHAR(255)"/>
+            <column name="value" type="TEXT"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_translation_language"
+            baseTableName="translation" baseColumnNames="language_id"
+            referencedTableName="language" referencedColumnNames="id"/>
+
+        <!-- app_privilege -->
+        <createTable tableName="app_privilege">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- app_user -->
+        <createTable tableName="app_user">
+            <column name="username" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="photo_url" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+        </createTable>
+
+        <!-- app_group -->
+        <createTable tableName="app_group">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="color" type="VARCHAR(255)"/>
+        </createTable>
+
+        <!-- user_group (join table) -->
+        <createTable tableName="user_group">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="user_group"
+            columnNames="user_id,group_id"
+            constraintName="pk_user_group"/>
+        <addForeignKeyConstraint
+            constraintName="fk_user_group_user"
+            baseTableName="user_group" baseColumnNames="user_id"
+            referencedTableName="app_user" referencedColumnNames="username"/>
+        <addForeignKeyConstraint
+            constraintName="fk_user_group_group"
+            baseTableName="user_group" baseColumnNames="group_id"
+            referencedTableName="app_group" referencedColumnNames="id"/>
+
+        <!-- group_privilege (join table) -->
+        <createTable tableName="group_privilege">
+            <column name="group_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="privilege_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="group_privilege"
+            columnNames="group_id,privilege_id"
+            constraintName="pk_group_privilege"/>
+        <addForeignKeyConstraint
+            constraintName="fk_group_privilege_group"
+            baseTableName="group_privilege" baseColumnNames="group_id"
+            referencedTableName="app_group" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_group_privilege_privilege"
+            baseTableName="group_privilege" baseColumnNames="privilege_id"
+            referencedTableName="app_privilege" referencedColumnNames="id"/>
+
+        <!-- group_translation (join table) -->
+        <createTable tableName="group_translation">
+            <column name="group_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="translation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="group_translation"
+            columnNames="group_id,translation_id"
+            constraintName="pk_group_translation"/>
+        <addForeignKeyConstraint
+            constraintName="fk_group_translation_group"
+            baseTableName="group_translation" baseColumnNames="group_id"
+            referencedTableName="app_group" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_group_translation_translation"
+            baseTableName="group_translation" baseColumnNames="translation_id"
+            referencedTableName="translation" referencedColumnNames="id"/>
+
+        <!-- allergen -->
+        <createTable tableName="allergen">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="inclusive" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+
+        <!-- allergen_translation (join table) -->
+        <createTable tableName="allergen_translation">
+            <column name="allergen_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="translation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="allergen_translation"
+            columnNames="allergen_id,translation_id"
+            constraintName="pk_allergen_translation"/>
+        <addForeignKeyConstraint
+            constraintName="fk_allergen_translation_allergen"
+            baseTableName="allergen_translation" baseColumnNames="allergen_id"
+            referencedTableName="allergen" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_allergen_translation_translation"
+            baseTableName="allergen_translation" baseColumnNames="translation_id"
+            referencedTableName="translation" referencedColumnNames="id"/>
+
+        <!-- category -->
+        <createTable tableName="category">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="media_url" type="VARCHAR(255)"/>
+            <column name="menu_priority" type="INT" defaultValueNumeric="0"/>
+            <column name="parent_category_id" type="VARCHAR(255)"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_category_parent"
+            baseTableName="category" baseColumnNames="parent_category_id"
+            referencedTableName="category" referencedColumnNames="id"/>
+
+        <!-- category_translation (join table) -->
+        <createTable tableName="category_translation">
+            <column name="category_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="translation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="category_translation"
+            columnNames="category_id,translation_id"
+            constraintName="pk_category_translation"/>
+        <addForeignKeyConstraint
+            constraintName="fk_category_translation_category"
+            baseTableName="category_translation" baseColumnNames="category_id"
+            referencedTableName="category" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_category_translation_translation"
+            baseTableName="category_translation" baseColumnNames="translation_id"
+            referencedTableName="translation" referencedColumnNames="id"/>
+
+        <!-- menu_item -->
+        <createTable tableName="menu_item">
+            <column name="id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE" defaultValueNumeric="0"/>
+            <column name="media_url" type="VARCHAR(255)"/>
+            <column name="category_id" type="VARCHAR(255)"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_menu_item_category"
+            baseTableName="menu_item" baseColumnNames="category_id"
+            referencedTableName="category" referencedColumnNames="id"/>
+
+        <!-- menu_item_translation (join table) -->
+        <createTable tableName="menu_item_translation">
+            <column name="menu_item_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="translation_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="menu_item_translation"
+            columnNames="menu_item_id,translation_id"
+            constraintName="pk_menu_item_translation"/>
+        <addForeignKeyConstraint
+            constraintName="fk_menu_item_translation_menu_item"
+            baseTableName="menu_item_translation" baseColumnNames="menu_item_id"
+            referencedTableName="menu_item" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_menu_item_translation_translation"
+            baseTableName="menu_item_translation" baseColumnNames="translation_id"
+            referencedTableName="translation" referencedColumnNames="id"/>
+
+        <!-- menu_item_allergen (join table) -->
+        <createTable tableName="menu_item_allergen">
+            <column name="menu_item_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="allergen_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+            tableName="menu_item_allergen"
+            columnNames="menu_item_id,allergen_id"
+            constraintName="pk_menu_item_allergen"/>
+        <addForeignKeyConstraint
+            constraintName="fk_menu_item_allergen_menu_item"
+            baseTableName="menu_item_allergen" baseColumnNames="menu_item_id"
+            referencedTableName="menu_item" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_menu_item_allergen_allergen"
+            baseTableName="menu_item_allergen" baseColumnNames="allergen_id"
+            referencedTableName="allergen" referencedColumnNames="id"/>
+
+    </changeSet>
+
+    <changeSet id="002-order-and-service-tables" author="table2taste">
+        <comment>Tables for orders, order items, services, and tables</comment>
+
+        <!-- app_table -->
+        <createTable tableName="app_table">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="capacity" type="INT"/>
+            <column name="user_id" type="VARCHAR(255)"/>
+            <column name="last_service" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_app_table_user"
+            baseTableName="app_table" baseColumnNames="user_id"
+            referencedTableName="app_user" referencedColumnNames="username"/>
+
+        <!-- service -->
+        <createTable tableName="service">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="table_id" type="BIGINT"/>
+            <column name="open_timestamp" type="TIMESTAMP"/>
+            <column name="close_timestamp" type="TIMESTAMP"/>
+            <column name="is_open" type="BOOLEAN" defaultValueBoolean="true"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_service_table"
+            baseTableName="service" baseColumnNames="table_id"
+            referencedTableName="app_table" referencedColumnNames="id"/>
+
+        <!-- FK on app_table.last_service -> service.id (circular, add after service) -->
+        <addForeignKeyConstraint
+            constraintName="fk_app_table_last_service"
+            baseTableName="app_table" baseColumnNames="last_service"
+            referencedTableName="service" referencedColumnNames="id"/>
+
+        <!-- app_order -->
+        <createTable tableName="app_order">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)"/>
+            <column name="service_id" type="BIGINT"/>
+            <column name="created_on" type="TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_app_order_user"
+            baseTableName="app_order" baseColumnNames="user_id"
+            referencedTableName="app_user" referencedColumnNames="username"/>
+        <addForeignKeyConstraint
+            constraintName="fk_app_order_service"
+            baseTableName="app_order" baseColumnNames="service_id"
+            referencedTableName="service" referencedColumnNames="id"/>
+
+        <!-- order_items -->
+        <createTable tableName="order_items">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="menu_item_id" type="VARCHAR(255)"/>
+            <column name="annotations" type="VARCHAR(255)"/>
+            <column name="price" type="DOUBLE"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_order_items_menu_item"
+            baseTableName="order_items" baseColumnNames="menu_item_id"
+            referencedTableName="menu_item" referencedColumnNames="id"/>
+
+        <!-- order_item_quantity -->
+        <createTable tableName="order_item_quantity">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="order_id" type="BIGINT"/>
+            <column name="order_item_id" type="INT"/>
+            <column name="quantity" type="INT"/>
+        </createTable>
+        <addForeignKeyConstraint
+            constraintName="fk_oiq_order"
+            baseTableName="order_item_quantity" baseColumnNames="order_id"
+            referencedTableName="app_order" referencedColumnNames="id"/>
+        <addForeignKeyConstraint
+            constraintName="fk_oiq_order_item"
+            baseTableName="order_item_quantity" baseColumnNames="order_item_id"
+            referencedTableName="order_items" referencedColumnNames="id"/>
+
+    </changeSet>
+
+    <changeSet id="003-service-table-index" author="table2taste">
+        <comment>Index on service.table_id for faster lookups</comment>
+        <createIndex tableName="service" indexName="idx_service_table_id">
+            <column name="table_id"/>
+        </createIndex>
+        <createIndex tableName="app_order" indexName="idx_app_order_service_id">
+            <column name="service_id"/>
+        </createIndex>
+        <createIndex tableName="order_item_quantity" indexName="idx_oiq_order_id">
+            <column name="order_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
