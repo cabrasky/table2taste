@@ -153,16 +153,16 @@ pipeline {
                     -e POSTGRES_USER=table2taste \
                     -e POSTGRES_PASSWORD=1234test \
                     -e POSTGRES_DB=table2taste \
-                    -p 15432:5432 postgres:16-alpine'''
+                    -p ${BUILD_NUMBER}:5432 postgres:16-alpine'''
                 sh '''for i in $(seq 1 30); do
-                    pg_isready -h localhost -p 15432 -U table2taste 2>/dev/null && break
+                    pg_isready -h localhost -p ${BUILD_NUMBER} -U table2taste 2>/dev/null && break
                     echo "Waiting for test-db... $i/30"
                     sleep 2
                 done'''
                 dir('packages/backend') {
                     sh 'chmod +x mvnw'
                     sh '''./mvnw test jacoco:report -q \
-                        -Dspring.datasource.url=jdbc:postgresql://localhost:15432/table2taste \
+                        -Dspring.datasource.url=jdbc:postgresql://localhost:${BUILD_NUMBER}/table2taste \
                         -Dspring.datasource.username=table2taste \
                         -Dspring.datasource.password=1234test \
                         -Dspring.liquibase.enabled=true \
