@@ -161,7 +161,22 @@ pipeline {
                 done'''
                 dir('packages/backend') {
                     sh 'chmod +x mvnw'
+                    sh '''# Warm Maven cache if stale (check lock file hash)
+                        CACHE_DIR=/var/lib/jenkins/.m2/repository
+                        LOCK_HASH=$(md5sum pom.xml | cut -d" " -f1)
+                        CACHE_HASH=$(cat ${CACHE_DIR}/pom.hash 2>/dev/null || echo "none")
+                        if [ "$LOCK_HASH" != "$CACHE_HASH" ]; then
+                            echo "Maven deps stale — downloading..."
+                            mkdir -p ${CACHE_DIR}
+                            ./mvnw dependency:go-offline -q \
+                                -Dmaven.repo.local=${CACHE_DIR} \
+                                -DskipTests 2>&1 | tail -2
+                            echo "$LOCK_HASH" > ${CACHE_DIR}/pom.hash
+                        else
+                            echo "Maven cache up to date"
+                        fi'''
                     sh '''./mvnw test jacoco:report -q \
+                        -Dmaven.repo.local=/var/lib/jenkins/.m2/repository \
                         -Dspring.datasource.url=jdbc:postgresql://localhost:${BUILD_NUMBER}/table2taste \
                         -Dspring.datasource.username=table2taste \
                         -Dspring.datasource.password=1234test \
@@ -186,7 +201,19 @@ pipeline {
             }
             steps {
                 dir('packages/frontend') {
-                    sh 'npm ci'
+                    sh '''# npm cache — restore node_modules if package-lock unchanged
+                        CACHE_DIR=/var/lib/jenkins/.npm
+                        LOCK_HASH=$(md5sum package-lock.json | cut -d" " -f1)
+                        CACHED_HASH=$(cat ${CACHE_DIR}/lock.hash 2>/dev/null || echo "none")
+
+                        if [ "$LOCK_HASH" = "$CACHED_HASH" ] && [ -d node_modules ]; then
+                            echo "npm cache hit — skipping install"
+                        else
+                            echo "npm cache miss — installing deps..."
+                            mkdir -p ${CACHE_DIR}
+                            npm ci --prefer-offline --cache ${CACHE_DIR}
+                            echo "$LOCK_HASH" > ${CACHE_DIR}/lock.hash
+                        fi'''
                     sh 'CI=false npx react-scripts build 2>&1'
                 }
             }
@@ -230,16 +257,22 @@ pipeline {
                 stage('Backend Image') {
                     steps {
                         dir('packages/backend') {
-                            sh "docker build -t ${BACKEND_IMAGE}:${IMAGE_TAG} ."
+                            sh "docker pull ${BACKEND_IMAGE}:latest 2>/dev/null || true"
+                            sh "docker build --cache-from ${BACKEND_IMAGE}:latest -t ${BACKEND_IMAGE}:${IMAGE_TAG} ."
+                            sh "docker tag ${BACKEND_IMAGE}:${IMAGE_TAG} ${BACKEND_IMAGE}:latest"
                             sh "docker push ${BACKEND_IMAGE}:${IMAGE_TAG}"
+                            sh "docker push ${BACKEND_IMAGE}:latest"
                         }
                     }
                 }
                 stage('Frontend Image') {
                     steps {
                         dir('packages/frontend') {
-                            sh "docker build -t ${FRONTEND_IMAGE}:${IMAGE_TAG} ."
+                            sh "docker pull ${FRONTEND_IMAGE}:latest 2>/dev/null || true"
+                            sh "docker build --cache-from ${FRONTEND_IMAGE}:latest -t ${FRONTEND_IMAGE}:${IMAGE_TAG} ."
+                            sh "docker tag ${FRONTEND_IMAGE}:${IMAGE_TAG} ${FRONTEND_IMAGE}:latest"
                             sh "docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}"
+                            sh "docker push ${FRONTEND_IMAGE}:latest"
                         }
                     }
                 }
