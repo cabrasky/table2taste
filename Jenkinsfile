@@ -145,8 +145,10 @@ pipeline {
                 expression { return !params.SKIP_TESTS }
             }
             steps {
-                sh 'docker rm -f test-db-${BUILD_NUMBER} 2>/dev/null || true'
-                sh 'fuser -k 15432/tcp 2>/dev/null || true'
+                sh '''# aggressive cleanup of any previous test-db containers
+                    docker rm -f test-db-${BUILD_NUMBER} test-db 2>/dev/null || true
+                    fuser -k 15432/tcp 2>/dev/null || true
+                    sleep 3'''
                 sh '''docker run -d --rm --name test-db-${BUILD_NUMBER} \
                     -e POSTGRES_USER=table2taste \
                     -e POSTGRES_PASSWORD=1234test \
@@ -170,7 +172,7 @@ pipeline {
             }
             post {
                 always {
-                    sh 'docker rm -f test-db-${BUILD_NUMBER} || true'
+                    sh 'docker rm -f test-db-${BUILD_NUMBER} test-db 2>/dev/null || true'
                     junit allowEmptyResults: true,
                         testResults: 'packages/backend/target/surefire-reports/*.xml'
                 }
