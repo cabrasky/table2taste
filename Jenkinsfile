@@ -295,17 +295,19 @@ def deployToNamespace(namespace, host) {
     sh """
         export KUBECONFIG=/var/lib/jenkins/.kube/config
 
-        # Update image tags in production deployment files
-        sed -i 's|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${IMAGE_TAG}|g' k8s/backend.yaml
-        sed -i 's|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${IMAGE_TAG}|g' k8s/frontend.yaml
+        # Inject image tags into production manifests (they have no tag → add :TAG)
+        cp k8s/backend.yaml /tmp/backend-prod.yaml
+        cp k8s/frontend.yaml /tmp/frontend-prod.yaml
+        sed -i 's|image: ${BACKEND_IMAGE}\$|image: ${BACKEND_IMAGE}:${IMAGE_TAG}|' /tmp/backend-prod.yaml
+        sed -i 's|image: ${FRONTEND_IMAGE}\$|image: ${FRONTEND_IMAGE}:${IMAGE_TAG}|' /tmp/frontend-prod.yaml
 
         # Apply production manifests
         kubectl apply -f k8s/namespace.yaml --validate=false
         kubectl apply -f k8s/secrets.yaml --validate=false
         kubectl apply -f k8s/configmap.yaml --validate=false
         kubectl apply -f k8s/db.yaml
-        kubectl apply -f k8s/backend.yaml
-        kubectl apply -f k8s/frontend.yaml
+        kubectl apply -f /tmp/backend-prod.yaml
+        kubectl apply -f /tmp/frontend-prod.yaml
         kubectl apply -f k8s/ingress.yaml
 
         # Wait for rollout
