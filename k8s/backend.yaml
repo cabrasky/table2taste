@@ -118,8 +118,12 @@ spec:
                 configMapKeyRef:
                   key: SPRING_JPA_SHOW_SQL
                   name: table2taste-config
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "none"
             - name: TZ
               value: "Europe/Madrid"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Dliquibase.secureParsing=false"
           resources:
             requests:
               cpu: "100m"

@@ -20,10 +20,6 @@ spec:
       labels:
         app: table2taste-frontend
     spec:
-      securityContext:
-        fsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
