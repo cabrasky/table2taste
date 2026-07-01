@@ -148,10 +148,14 @@ pipeline {
                 sh 'docker rm -f test-db 2>/dev/null || true'
                 sh '''docker run -d --rm --name test-db \
                     -e POSTGRES_USER=table2taste \
-                    -e POSTGRES_PASSWORD=1234test \
+                    -e POSTGRES_PASSWORD=*** \
                     -e POSTGRES_DB=table2taste \
                     -p 15432:5432 postgres:16-alpine'''
-                sleep 3
+                sh '''for i in $(seq 1 30); do
+                    pg_isready -h localhost -p 15432 -U table2taste 2>/dev/null && break
+                    echo "Waiting for test-db... $i/30"
+                    sleep 2
+                done'''
                 dir('packages/backend') {
                     sh 'chmod +x mvnw'
                     sh '''./mvnw test jacoco:report -q \
