@@ -87,13 +87,25 @@ pipeline {
                 expression { return !params.SKIP_TESTS }
             }
             steps {
+                sh 'docker rm -f test-db 2>/dev/null || true'
+                sh '''docker run -d --rm --name test-db \
+                    -e POSTGRES_USER=table2taste \
+                    -e POSTGRES_PASSWORD=test \
+                    -e POSTGRES_DB=table2taste \
+                    -p 5432:5432 postgres:16-alpine'''
+                sleep 3
                 dir('packages/backend') {
                     sh 'chmod +x mvnw'
-                    sh './mvnw test jacoco:report -q'
+                    sh '''./mvnw test jacoco:report -q \
+                        -Dspring.datasource.url=jdbc:postgresql://localhost:5432/table2taste \
+                        -Dspring.datasource.username=table2taste \
+                        -Dspring.datasource.password=test \
+                        -Dspring.liquibase.enabled=true'''
                 }
             }
             post {
                 always {
+                    sh 'docker rm -f test-db 2>/dev/null || true'
                     junit allowEmptyResults: true,
                         testResults: 'packages/backend/target/surefire-reports/*.xml'
                 }
