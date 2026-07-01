@@ -153,9 +153,9 @@ pipeline {
                     -e POSTGRES_USER=table2taste \
                     -e POSTGRES_PASSWORD=1234test \
                     -e POSTGRES_DB=table2taste \
-                    -p ${BUILD_NUMBER}:5432 postgres:16-alpine'''
+                    -p $((15000 + BUILD_NUMBER)):5432 postgres:16-alpine'''
                 sh '''for i in $(seq 1 30); do
-                    pg_isready -h localhost -p ${BUILD_NUMBER} -U table2taste 2>/dev/null && break
+                    pg_isready -h localhost -p $((15000 + BUILD_NUMBER)) -U table2taste 2>/dev/null && break
                     echo "Waiting for test-db... $i/30"
                     sleep 2
                 done'''
