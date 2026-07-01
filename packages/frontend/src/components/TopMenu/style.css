@@ -1,0 +1,250 @@
+.top-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.top-menu .restaurant-name {
+    position: relative;
+    font-family: var(--h2-font-family);
+    font-weight: var(--h2-font-weight);
+    color: var(--main-color-10);
+    font-size: var(--h2-font-size);
+    text-align: center;
+    letter-spacing: var(--h2-letter-spacing);
+    line-height: var(--h2-line-height);
+    font-style: var(--h2-font-style);
+    background-color: var(--main-color);
+    display: block;
+    width: 100%;
+}
+
+.top-menu .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    position: relative;
+    align-self: stretch;
+    flex: 0 0 auto;
+    background-color: var(--secondary-color);
+    color: var(--secondary-color-10);
+    border-radius: 0px 0px 15px 14px;
+    overflow: hidden;
+}
+
+.top-menu .breadcrumb {
+    display: inline-flex;
+    gap: 7px;
+}
+
+
+.top-menu .link {
+    position: relative;
+    width: fit-content;
+    font-family: var(--p-font-family);
+    font-weight: var(--p-font-weight);
+    font-size: var(--p-font-size);
+    text-align: center;
+    letter-spacing: var(--p-letter-spacing);
+    line-height: var(--p-line-height);
+    white-space: nowrap;
+    font-style: var(--p-font-style);
+    -webkit-text-stroke-width: var(--p-text-stroke-width);
+    text-decoration: none;
+
+}
+
+.top-menu .breadcrumb-items {
+    position: relative;
+    width: 9.5px;
+    height: 16px;
+}
+
+.top-menu .current-page {
+    font-family: var(--h3-font-family);
+    font-weight: var(--h3-font-weight);
+    color: var(--secondary-color-10);
+    font-size: var(--h3-font-size);
+    text-align: center;
+    letter-spacing: var(--h3-letter-spacing);
+    line-height: var(--h3-line-height);
+    white-space: nowrap;
+    font-style: var(--h3-font-style);
+
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    flex: 0 0 auto;
+}
+
+
+
+.top-menu .search-bar {
+    display: flex;
+    align-items: center;
+    padding: 0px 30px;
+    position: relative;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.top-menu .img {
+    position: relative;
+    width: 345px;
+    height: 40px;
+}
+
+.top-menu .filter-icon {
+    position: relative;
+    width: 32px;
+    height: 32px;
+}
+
+.search-box {
+    font-size: 20px;
+    border: solid 3px var(--secondary-color-100);
+    background-color: var(--secondary-color-10);
+    display: inline-block;
+    position: relative;
+    border-radius: 2.5em;
+}
+
+.search-box input[type=text] {
+    display: inline-flex;
+    font-family: inherit;
+    font-weight: bold;
+    width: 2em;
+    height: 2em;
+    padding: 0.3em 1.1em 0.3em 0.3em;
+    border: none;
+    box-sizing: border-box;
+    background-color: var(--secondary-color-10);
+    border-radius: 2em;
+    transition: width 800ms cubic-bezier(0.68, -0.55, 0.27, 1.55) 150ms;
+}
+
+.search-box input[type=text]:focus {
+    outline: none;
+}
+
+.search-box input[type=text]:focus,
+.search-box input[type=text]:not(:placeholder-shown) {
+    width: 18em;
+    transition: width 800ms cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.search-box input[type=text]:focus+button[type=reset],
+.search-box input[type=text]:not(:placeholder-shown)+button[type=reset] {
+    transform: rotate(-45deg) translateY(0);
+    transition: transform 150ms ease-out 800ms;
+    top: 50%;
+    right: 12px;
+}
+
+
+.search-box input[type=text]:focus+button[type=reset]:after,
+.search-box input[type=text]:not(:placeholder-shown)+button[type=reset]:after {
+    opacity: 1;
+    transition: top 150ms ease-out 950ms, right 150ms ease-out 950ms, opacity 150ms ease 950ms;
+}
+
+.search-box input[type=text]:focus+button[type=reset],
+.search-box input[type=text]:not(:placeholder-shown)+button[type=reset] {
+    width: 2em;
+    height: 2em;
+    top: 0;
+}
+
+
+
+.search-box button[type=reset] {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    outline: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    transform: rotate(-45deg) translateY(2.2em);
+    transition: transform 150ms ease-out 150ms;
+}
+
+.search-box button[type=reset]:before,
+.search-box button[type=reset]:after {
+    content: "";
+    background-color: var(--secondary-color-100);
+    width: 2px;
+    height: 16px;
+    position: absolute;
+}
+
+.search-box button[type=reset]:after {
+    transform: rotate(90deg);
+    opacity: 0;
+    transition: transform 150ms ease-out, opacity 150ms ease-out;
+}
+
+.filter-button {
+    background: none;
+    border: none;
+}
+
+.filter-button img {
+    width: 33px;
+    height: 33px;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .top-menu .restaurant-name {
+        font-family: var(--h3-font-family);
+        font-weight: var(--h3-font-weight);
+        font-size: var(--h3-font-size);
+        letter-spacing: var(--h3-letter-spacing);
+        line-height: var(--h3-line-height);
+        font-style: var(--h3-font-style);
+        background-color: var(--main-color);
+    }
+    .search-bar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .search-bar .search-box {
+        width: 100%;
+    }
+
+
+
+    .search-box input[type=text] {
+        width: 100%;
+    }
+
+    .search-box button[type=reset] {
+        transform: rotate(0deg) !important;
+    }
+
+    .search-box button[type=reset]::after {
+        display: none;
+    }
+
+    .search-box button[type=reset]::before {
+        /* 
+        content: url('../img/search-icon.svg');
+        */
+        height: 8px;
+        right: 6px !important;
+        background: none;
+        transform: rotate(0deg) scale(.6) !important;
+
+        right: inherit;
+    }
+
+
+}

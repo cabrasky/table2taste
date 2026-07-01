@@ -1,0 +1,5 @@
+.menu-view {
+    display: grid;
+    grid-template-columns: minmax(125px, 15%) auto;
+    grid-template-rows: 1fr;
+}

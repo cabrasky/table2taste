@@ -1,0 +1,23 @@
+.table-status-container {
+    padding: 20px;
+}
+
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.table-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.table-card.occupied {
+    background-color: #ffcdd2;
+}
+
+.table-card.free {
+    background-color: #c8e6c9;
+}

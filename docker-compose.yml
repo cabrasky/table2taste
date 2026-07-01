@@ -1,10 +1,10 @@
 services:
   backend:
     build:
-      context: table2taste-backend_springboot
+      context: packages/backend
       dockerfile: Dockerfile
     volumes:
-      - ./table2taste-backend_springboot:/app:cached
+      - ./packages/backend:/app:cached
     env_file:
       - .env
     depends_on:
@@ -20,10 +20,10 @@ services:
 
   frontend:
     build:
-      context: table2taste-frontend
+      context: packages/frontend
       dockerfile: Dockerfile
     volumes:
-      - ./table2taste-frontend:/app:cached
+      - ./packages/frontend:/app:cached
     ports:
       - "3000:80"
     env_file:
@@ -41,10 +41,10 @@ services:
 
   db:
     build:
-      context: table2taste-db
+      context: packages/db
       dockerfile: Dockerfile
     volumes:
-      - ./table2taste-db/data:/var/lib/postgresql/data
+      - ./packages/db/data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD

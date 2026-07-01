@@ -1,0 +1,24 @@
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+    padding: 4px;
+    background-color: #8c9091;
+}
+
+.footer>div {
+    position: relative;
+    width: fit-content;
+    font-family: var(--p-font-family);
+    font-weight: var(--p-font-weight);
+    color: var(--principal-button-text-color);
+    font-size: var(--p-font-size);
+    text-align: right;
+    letter-spacing: var(--p-letter-spacing);
+    line-height: var(--p-line-height);
+    white-space: nowrap;
+    font-style: var(--p-font-style);
+}

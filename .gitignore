@@ -1,3 +1,13 @@
 .env
+.env.local
 /.metadata/
 RemoteSystemsTempFiles/.project
+
+# project
+.sonarlint/
+
+# database data
+packages/db/data/
+
+# node
+node_modules/

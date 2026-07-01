@@ -1,0 +1,684 @@
+{
+	"languages": [
+		"en",
+		"es",
+		"fr",
+		"de",
+		"it",
+		"pt",
+		"nl",
+		"ru",
+		"zh",
+		"ja",
+		"ko",
+		"ar",
+		"hi",
+		"bn",
+		"vi",
+		"tr",
+		"pl",
+		"sv",
+		"fi",
+		"no"
+	],
+	"allergens": [
+		{
+			"id": "celery",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Celery"
+				},
+				"es": {
+					"name": "Apio"
+				}
+			}
+		},
+		{
+			"id": "crustaceans",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Crustaceans"
+				},
+				"es": {
+					"name": "Crustáceos"
+				}
+			}
+		},
+		{
+			"id": "eggs",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Eggs"
+				},
+				"es": {
+					"name": "Huevos"
+				}
+			}
+		},
+		{
+			"id": "fish",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Fish"
+				},
+				"es": {
+					"name": "Pescado"
+				}
+			}
+		},
+		{
+			"id": "lupin",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Lupin"
+				},
+				"es": {
+					"name": "Altramuces"
+				}
+			}
+		},
+		{
+			"id": "milk",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Milk"
+				},
+				"es": {
+					"name": "Leche"
+				}
+			}
+		},
+		{
+			"id": "molluscs",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Molluscs"
+				},
+				"es": {
+					"name": "Moluscos"
+				}
+			}
+		},
+		{
+			"id": "mustard",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Mustard"
+				},
+				"es": {
+					"name": "Mostaza"
+				}
+			}
+		},
+		{
+			"id": "peanuts",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Peanuts"
+				},
+				"es": {
+					"name": "Cacauetes"
+				}
+			}
+		},
+		{
+			"id": "sesame",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Sesame"
+				},
+				"es": {
+					"name": "Sésamo"
+				}
+			}
+		},
+		{
+			"id": "soybeans",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Soybeans"
+				},
+				"es": {
+					"name": "Soja"
+				}
+			}
+		},
+		{
+			"id": "sulphites",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Sulphur Dioxide/Sulphites"
+				},
+				"es": {
+					"name": "Dioxido de Azufre/Sulfitos"
+				}
+			}
+		},
+		{
+			"id": "gluten",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Gluten"
+				},
+				"es": {
+					"name": "Gluten"
+				}
+			}
+		},
+		{
+			"id": "nuts",
+			"inclusive": false,
+			"translations": {
+				"en": {
+					"name": "Nuts"
+				},
+				"es": {
+					"name": "Frutos Secos"
+				}
+			}
+		},
+		{
+			"id": "vegan",
+			"inclusive": true,
+			"translations": {
+				"en": {
+					"name": "Vegan"
+				},
+				"es": {
+					"name": "Vegano"
+				}
+			}
+		},
+		{
+			"id": "vegetarian",
+			"inclusive": true,
+			"translations": {
+				"en": {
+					"name": "Vegetarian"
+				},
+				"es": {
+					"name": "Vegetariano"
+				}
+			}
+		}
+	],
+	"privileges": [
+		"UPDATE_CATEGORIES",
+		"DELETE_CATEGORIES",
+		"CREATE_MENU_ITEMS",
+		"UPDATE_MENU_ITEMS",
+		"DELETE_MENU_ITEMS",
+		"PLACE_ORDER",
+		"PLACE_ORDER_TO_OTHERS",
+		"REGISTER_USER",
+		"DELETE_TABLES",
+		"ADD_TABLES",
+		"VIEW_TABLES",
+		"UPDATE_TABLES",
+		"ADMIN_VIEW"
+	],
+	"groups": [
+		{
+			"id": "admin",
+			"color": "#ff0000",
+			"translations": {
+				"en": {
+					"name": "Admin"
+				},
+				"es": {
+					"name": "Administrador"
+				}
+			},
+			"privileges": [
+				"CREATE_CATEGORIES",
+				"UPDATE_CATEGORIES",
+				"DELETE_CATEGORIES",
+				"CREATE_MENU_ITEMS",
+				"UPDATE_MENU_ITEMS",
+				"DELETE_MENU_ITEMS",
+				"REGISTER_USER",
+				"READ_USER_INFO",
+				"DELETE_TABLES",
+				"ADD_TABLES",
+				"VIEW_TABLES",
+				"UPDATE_TABLES",
+				"ADMIN_VIEW"
+			]
+		},
+		{
+			"id": "waiter",
+			"color": "#00ff00",
+			"translations": {
+				"en": {
+					"name": "Waiter"
+				},
+				"es": {
+					"name": "Camarero"
+				}
+			},
+			"privileges": [
+				"PLACE_ORDER",
+				"PLACE_ORDER_TO_OTHERS",
+				"VIEW_TABLES"
+			]
+		},
+		{
+			"id": "table",
+			"color": "#0000ff",
+			"translations": {
+				"en": {
+					"name": "Table"
+				},
+				"es": {
+					"name": "Mesa"
+				}
+			},
+			"privileges": [
+				"PLACE_ORDER"
+			]
+		}
+	],
+	"users": [
+		{
+			"username": "admin",
+			"name": "admin",
+			"photo_url": "admin_photo_url",
+			"password": "admin",
+			"groups": [
+				"admin"
+			]
+		},
+		{
+			"username": "waiter",
+			"name": "waiter",
+			"photo_url": "waiter_photo_url",
+			"password": "waiter",
+			"groups": [
+				"waiter"
+			]
+		},
+		{
+			"username": "guest",
+			"name": "Guest",
+			"photo_url": "guest",
+			"password": "randK",
+			"groups": [
+			]
+		}
+	],
+	"tables": [
+		{
+			"id": 1,
+			"capacity": 4			
+		},
+		{
+			"id": 2,
+			"capacity": 2			
+		},
+		{
+			"id": 3,
+			"capacity": 6			
+		}
+	],
+	"categories": [
+		{
+			"id": "entrantes",
+			"menuPriority": 0,
+			"translations": {
+				"en": {
+					"name": "Appetizers"
+				},
+				"es": {
+					"name": "Entrantes"
+				}
+			},
+			"parentCategoryId": null,
+			"menuItems": [
+				{
+					"id": "jamon_iberico",
+					"price": 15.00,
+					"mediaUrl": "https://loveincstatic.blob.core.windows.net/lovefood/2020/guide-to-jamon-iberico/guide-to-jamon-intro.jpg",
+					"allergens": [
+						"gluten"
+					],
+					"translations": {
+						"en": {
+							"name": "Iberian Ham",
+							"description": "Thin slices of Iberian ham served with crispy bread."
+						},
+						"es": {
+							"name": "Jamón Ibérico",
+							"description": "Finas lonchas de jamón ibérico servidas con pan de cristal."
+						}
+					}
+				},
+				{
+					"id": "gazpacho_andaluz",
+					"price": 8.00,
+					"mediaUrl": "https://img2.rtve.es/imagenes/asi-preparan-andaluces-gazpacho-autentico/1621621774172.jpg",
+					"allergens": [
+						"vegan",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Andalusian Gazpacho",
+							"description": "Cold tomato, pepper, cucumber, and garlic soup, drizzled with extra virgin olive oil."
+						},
+						"es": {
+							"name": "Gazpacho Andaluz",
+							"description": "Sopa fría de tomate, pimiento, pepino y ajo, aliñada con aceite de oliva virgen extra."
+						}
+					}
+				},
+				{
+					"id": "tortilla_espanola",
+					"price": 6.00,
+					"mediaUrl": "https://mojo.generalmills.com/api/public/content/9xIHKwJDH0-1wbHPsVCCVQ_gmi_hi_res_jpeg.jpeg?v=2bfc22c6&t=16e3ce250f244648bef28c5949fb99ff",
+					"allergens": [
+						"eggs",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Spanish Omelette",
+							"description": "Traditional potato omelette with onions."
+						},
+						"es": {
+							"name": "Tortilla Española",
+							"description": "Tortilla de patatas tradicional con cebolla."
+						}
+					}
+				},
+				{
+					"id": "croquetas_de_jamon",
+					"price": 10.00,
+					"mediaUrl": "https://elgourmet.s3.amazonaws.com/recetas/cover/fba2ab0920888f003178592407d8fd98_3_3_photo.png",
+					"allergens": [
+						"gluten",
+						"milk",
+						"eggs"
+					],
+					"translations": {
+						"en": {
+							"name": "Ham Croquettes",
+							"description": "Crunchy croquettes filled with Iberian ham and béchamel sauce."
+						},
+						"es": {
+							"name": "Croquetas de Jamón",
+							"description": "Croquetas crujientes rellenas de jamón ibérico y bechamel."
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": "platos_principales",
+			"menuPriority": 1,
+			"translations": {
+				"en": {
+					"name": "Main Courses"
+				},
+				"es": {
+					"name": "Platos Principales"
+				}
+			},
+			"parentCategoryId": null,
+			"menuItems": [
+				{
+					"id": "paella_valenciana",
+					"price": 20.00,
+					"mediaUrl": "https://www.eatingwell.com/thmb/hfLtiL1DpSbIDuESpc-GR6Vi7Lo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/paella-valenciana-d8e69623cc56438590bf1d5c040e384d.jpg",
+					"allergens": [
+					],
+					"translations": {
+						"en": {
+							"name": "Valencian Paella",
+							"description": "Perfectly cooked rice with chicken, rabbit, green beans, and butter beans."
+						},
+						"es": {
+							"name": "Paella Valenciana",
+							"description": "Arroz cocido a la perfección con pollo, conejo, judías verdes y garrofón."
+						}
+					}
+				},
+				{
+					"id": "merluza_a_la_gallega",
+					"price": 18.00,
+					"mediaUrl": "https://www.elartedeamasar.com/wp-content/uploads/2016/05/fe857-merluza-a-la-gallega-cazuela.jpg",
+					"allergens": [
+						"fish"
+					],
+					"translations": {
+						"en": {
+							"name": "Galician-Style Hake",
+							"description": "Baked hake fillet with potatoes and paprika."
+						},
+						"es": {
+							"name": "Merluza a la Gallega",
+							"description": "Filete de merluza al horno con patatas y pimentón."
+						}
+					}
+				},
+				{
+					"id": "cordero_asado",
+					"price": 22.00,
+					"mediaUrl": "https://iberflavours.com/wp-content/uploads/2020/06/cordero-asado-1170x780.jpg",
+					"allergens": [
+					],
+					"translations": {
+						"en": {
+							"name": "Roast Lamb",
+							"description": "Tender lamb pieces roasted at low temperature with aromatic herbs."
+						},
+						"es": {
+							"name": "Cordero Asado",
+							"description": "Tiernas piezas de cordero asado a baja temperatura con hierbas aromáticas."
+						}
+					}
+				},
+				{
+					"id": "pisto_manchego",
+					"price": 14.00,
+					"mediaUrl": "https://radfoodie.com/wp-content/uploads/2020/11/Pisto-manchego-in-bowl-square.jpg",
+					"allergens": [
+						"vegan",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Manchego Ratatouille",
+							"description": "Stew of seasonal vegetables with tomato, pepper, zucchini, and eggplant."
+						},
+						"es": {
+							"name": "Pisto Manchego",
+							"description": "Estofado de verduras de temporada con tomate, pimiento, calabacín y berenjena."
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": "postres",
+			"menuPriority": 2,
+			"translations": {
+				"en": {
+					"name": "Desserts"
+				},
+				"es": {
+					"name": "Postres"
+				}
+			},
+			"parentCategoryId": null,
+			"menuItems": [
+				{
+					"id": "tarta_de_santiago",
+					"price": 7.00,
+					"mediaUrl": "https://assets-eu-01.kc-usercontent.com/559bb7d3-88a4-01c1-79a3-dd4d5b2d2bb0/831d8912-b431-4e4f-b642-785339f5329d/Tarta%20de%20Santiago_Landscape%201.jpg",
+					"allergens": [
+						"nuts",
+						"eggs",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Santiago Cake",
+							"description": "Traditional Galician almond cake with powdered sugar."
+						},
+						"es": {
+							"name": "Tarta de Santiago",
+							"description": "Tradicional tarta de almendra gallega con azúcar glas."
+						}
+					}
+				},
+				{
+					"id": "crema_catalana",
+					"price": 6.00,
+					"mediaUrl": "https://spanishsabores.com/wp-content/uploads/2023/08/Crema-Catalana-Featured.jpg",
+					"allergens": [
+						"milk",
+						"eggs",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Catalan Cream",
+							"description": "Delicious custard with a crunchy caramelized sugar layer."
+						},
+						"es": {
+							"name": "Crema Catalana",
+							"description": "Deliciosa crema con una capa crujiente de azúcar caramelizado."
+						}
+					}
+				},
+				{
+					"id": "churros_con_chocolate",
+					"price": 5.00,
+					"mediaUrl": "https://www.seasonsandsuppers.ca/wp-content/uploads/2015/05/churros-con-chocolate1050-2.jpg",
+					"allergens": [
+						"gluten",
+						"milk",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Churros with Chocolate",
+							"description": "Crispy churros served with a rich cup of hot chocolate."
+						},
+						"es": {
+							"name": "Churros con Chocolate",
+							"description": "Churros crujientes servidos con una rica taza de chocolate caliente."
+						}
+					}
+				}
+			]
+		},
+		{
+			"id": "bebidas",
+			"menuPriority": 3,
+			"translations": {
+				"en": {
+					"name": "Beverages"
+				},
+				"es": {
+					"name": "Bebidas"
+				}
+			},
+			"parentCategoryId": null,
+			"menuItems": [
+				{
+					"id": "sangria",
+					"price": 4.00,
+					"mediaUrl": "https://cdn.loveandlemons.com/wp-content/uploads/2021/06/sangria-1.jpg",
+					"allergens": [
+						"sulphur_dioxide_sulphites",
+						"vegan",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Sangria",
+							"description": "Refreshing red wine beverage with fruits and a splash of liquor."
+						},
+						"es": {
+							"name": "Sangría",
+							"description": "Refrescante bebida de vino tinto con frutas y un toque de licor."
+						}
+					}
+				},
+				{
+					"id": "agua_de_valencia",
+					"price": 6.00,
+					"mediaUrl": "https://realfood.tesco.com/media/images/RFO-1400x919-Agua-mini-mini-fcddd958-38ec-496d-9c06-5ced83581ada-0-1400x919.jpg",
+					"allergens": [
+						"sulphur_dioxide_sulphites",
+						"vegan",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Agua de Valencia",
+							"description": "Cocktail of cava, orange juice, vodka, and gin."
+						},
+						"es": {
+							"name": "Agua de Valencia",
+							"description": "Cóctel de cava, zumo de naranja, vodka y ginebra."
+						}
+					}
+				},
+				{
+					"id": "vino_rioja",
+					"price": 5.00,
+					"mediaUrl": "https://vivancoculturadevino.es/blog/wp-content/uploads/2016/03/COPA-VINO-3.jpg",
+					"allergens": [
+						"sulphur_dioxide_sulphites",
+						"vegan",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Rioja Wine",
+							"description": "Selection of red wines from the Rioja region."
+						},
+						"es": {
+							"name": "Vino Rioja",
+							"description": "Selección de vinos tintos de la región de Rioja."
+						}
+					}
+				},
+				{
+					"id": "horchata_de_chufa",
+					"price": 3.00,
+					"mediaUrl": "http://localhost:3000/menuItem/horchata_de_chufa",
+					"allergens": [
+						"vegan",
+						"vegetarian"
+					],
+					"translations": {
+						"en": {
+							"name": "Tiger Nut Milk",
+							"description": "Sweet beverage made from tiger nuts, typical of Valencia."
+						},
+						"es": {
+							"name": "Horchata de Chufa",
+							"description": "Bebida dulce a base de chufas, típica de Valencia."
+						}
+					}
+				}
+			]
+		}
+	]
+}

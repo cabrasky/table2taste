@@ -1,0 +1,58 @@
+ty@startuml
+
+enum PlateTranslationKey {
+  name
+  description
+}
+
+class Plate {
+  id: TEXT
+  price: DECIMAL
+  preparation_time: INT
+  media_url: TEXT
+}
+
+class Category {
+  id: TEXT
+  name: TEXT
+  media_url: TEXT
+}
+
+class Allergen {
+  id: TEXT
+  name: TEXT
+  media_url: TEXT
+}
+
+class Language {
+  id: TEXT
+}
+
+class Translation {
+  id: SERIAL
+  value: TEXT
+}
+
+Plate "1" -- "1..*" Category : has
+Plate "1" -- "1..*" Allergen : contains
+Plate "1" -- "1..*" PlateTranslation : translations
+Allergen "1" -- "1..*" AllergenTranslation : translations
+Language "1" -- "1..*" LanguageTranslation : translations
+
+class PlateTranslation {
+  plate_id: TEXT
+  translation_id: SERIAL
+  translation_key: PlateTranslationKey
+}
+
+class AllergenTranslation {
+  allergen_id: TEXT
+  translation_id: SERIAL
+}
+
+class LanguageTranslation {
+  language_id: TEXT
+  translation_id: SERIAL
+}
+
+@enduml

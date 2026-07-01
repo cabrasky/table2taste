@@ -1,0 +1,55 @@
+.menu-view {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.menu-view .content {
+    display: flex;
+    flex-direction:row;
+}
+
+
+.menu-view .menu-item-list {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+    padding: 15px;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+.menu-view .sidebar {
+    width: min(100%, 300px);
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    transition: all 0.5s ease-in-out;
+}
+
+.menu-view .toggle-sidebar-button {
+    align-items: flex-start;
+    position: absolute;
+    left: -60px;
+}
+
+.menu-view .allergen-filter-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-view .sidebar.closed {
+    transform: translateX(100%);
+    width: 0;
+}
+
+.menu-view .sidebar.open {
+    transform: translateX(0);
+}

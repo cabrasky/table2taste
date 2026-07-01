@@ -1,0 +1,33 @@
+.tree-menu {
+    padding: 10px;
+    
+}
+
+.tree-menu-node {
+    margin-bottom: 5px;
+}
+
+.tree-menu-node.actual {
+    font-weight: bold;
+}
+
+.tree-menu-node button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.tree-menu-children {
+    margin-left: 20px;
+}
+
+.tree-menu-children a {
+    display: block;
+    margin-top: 3px;
+    text-decoration: none;
+}
+
+.tree-menu-children a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,30 @@
+{
+    "es": {
+      "gui.menu.admin": "Menu de Administrador",
+      "gui.menu": "Menú",
+      "gui.addtocart": "Añadir al carrito",
+      "gui.allergens": "Alérgenos",
+      "gui.description": "Descripción",
+      "gui.profile": "Perfil",
+      "gui.seereceipt": "Ver Recibo",
+      "gui.adminpage": "Página de Administrador",
+      "gui.closeServiceAndOrderTicket": "Cerrar Servicio y Ordenar Ticket",
+      "gui.occupied": "Ocupada",
+      "gui.free": "Libre"
+    },
+    "en": {
+      "gui.menu.admin": "Admin Menu",
+      "gui.menu": "Menu",
+      "gui.addtocart": "Add to cart",
+      "gui.allergens": "Allergens",
+      "gui.description": "Description",
+      "gui.settings": "Settings",
+      "gui.profile": "Profile",
+      "gui.seereceipt": "See Receipt",
+      "gui.adminpage": "Admin Page",
+      "gui.closeServiceAndOrderTicket": "Close Service & Order Ticket",
+      "gui.occupied": "Occupied",
+      "gui.free": "Free"
+    }
+  }
+  

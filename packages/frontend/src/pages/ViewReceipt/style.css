@@ -1,0 +1,38 @@
+.receipt-view-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.receipt-view-page .order-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.receipt-view-page .order-item {
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.receipt-view-page .order-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.receipt-view-page .order-items {
+    margin-top: 10px;
+}
+
+.receipt-view-page .order-item-details {
+    margin-bottom: 5px;
+}
+
+.receipt-view-page .item-name {
+    font-weight: bold;
+}
+
+.item-info {
+    margin-left: 10px;
+}

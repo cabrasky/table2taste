@@ -1,0 +1,19 @@
+.language-switcher {
+    display: flex;
+    align-items: center;
+}
+
+.flag-icon {
+    cursor: pointer;
+    height: 20px;
+    margin-right: 10px;
+    transition: filter 0.3s;
+}
+
+.flag-icon.grayscale {
+    filter: grayscale(100%);
+}
+
+.flag-icon:last-child {
+    margin-right: 0;
+}
