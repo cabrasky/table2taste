@@ -148,7 +148,7 @@ pipeline {
                 sh 'docker rm -f test-db 2>/dev/null || true'
                 sh '''docker run -d --rm --name test-db \
                     -e POSTGRES_USER=table2taste \
-                    -e POSTGRES_PASSWORD=*** \
+                    -e POSTGRES_PASSWORD=1234test \
                     -e POSTGRES_DB=table2taste \
                     -p 15432:5432 postgres:16-alpine'''
                 sh '''for i in $(seq 1 30); do
