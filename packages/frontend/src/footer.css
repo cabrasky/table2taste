@@ -5,19 +5,22 @@
     width: 100%;
     color: white;
     text-align: center;
-    padding: 4px;
-    background-color: #8c9091;
+    padding: 8px;
+    background: linear-gradient(135deg, var(--main-color) 0%, var(--secondary-color) 100%);
+    font-size: 12px;
+    z-index: 100;
 }
 
 .footer>div {
     position: relative;
     width: fit-content;
+    margin: 0 auto;
     font-family: var(--p-font-family);
-    font-weight: var(--p-font-weight);
-    color: var(--principal-button-text-color);
-    font-size: var(--p-font-size);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
     text-align: right;
-    letter-spacing: var(--p-letter-spacing);
+    letter-spacing: 0.5px;
     line-height: var(--p-line-height);
     white-space: nowrap;
     font-style: var(--p-font-style);

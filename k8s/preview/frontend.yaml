@@ -1,0 +1,68 @@
+# ── Preview Frontend ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: table2taste-frontend
+  namespace: table2taste-preview-__SUBDOMAIN__
+  labels:
+    app: table2taste-frontend
+    type: preview
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: table2taste-frontend
+  template:
+    metadata:
+      labels:
+        app: table2taste-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: 192.168.1.11:5000/table2taste-frontend:__IMAGE_TAG__
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: REACT_APP_API_URL
+              value: "https://__SUBDOMAIN__.table2taste.cabrasky.net/api"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "80Mi"
+            limits:
+              cpu: "150m"
+              memory: "224Mi"
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            failureThreshold: 18
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: table2taste-frontend
+  namespace: table2taste-preview-__SUBDOMAIN__
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: table2taste-frontend
+  type: ClusterIP

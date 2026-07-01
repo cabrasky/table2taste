@@ -3,8 +3,8 @@ import LanguageSelector from "../LanguageSelector/LanguageSelector";
 import Breadcrumb from "../Breadcrumb";
 import { useCart } from "../../contexts/CartContext";
 import { Link } from "react-router-dom";
-import { Icon } from "@mui/material";
-import { ShoppingCart } from "@mui/icons-material";
+import { Icon, Badge } from "@mui/material";
+import { ShoppingCart, Restaurant, AdminPanelSettings, TableRestaurant } from "@mui/icons-material";
 import { useAuth } from "../../contexts/AuthContext";
 import { Protected } from "../Protected";
 import Translate from "../Translate";
@@ -16,45 +16,58 @@ export const TopMenu: React.FC = () => {
 
     return (
         <header className="top-menu">
-            <div className="restaurant-name">
-                <Link to={"/"}>Table2Taste</Link>
-            </div>
-            <div className="nav">
-                <Breadcrumb />
-                <div className="language-selector">
-                    <LanguageSelector />
+            <div className="top-menu-inner">
+                <div className="restaurant-brand">
+                    <Link to={"/"} className="brand-link">
+                        <Restaurant className="brand-icon" />
+                        <span className="brand-name">Table2Taste</span>
+                    </Link>
                 </div>
-                <div className="user">
-                    {user !== null ? (
-                        <p onClick={() => setToken(null)}><Translate translationKey="gui.profile" /> {user.name}</p>
-                    ) : (
-                        <Link to='/login'>
-                            Login
-                        </Link>
-                    )}
+                <div className="top-menu-nav">
+                    <div className="breadcrumb-wrapper">
+                        <Breadcrumb />
+                    </div>
+                    <div className="top-menu-actions">
+                        <div className="language-selector">
+                            <LanguageSelector />
+                        </div>
+                        <Protected privilege="PLACE_ORDER">
+                            <div className="cart">
+                                <Link to='/cart' className="cart-link">
+                                    <Badge badgeContent={totalItems} color="primary" overlap="circular">
+                                        <ShoppingCart className="cart-icon" />
+                                    </Badge>
+                                </Link>
+                            </div>
+                        </Protected>
+                        <Protected privilege="ADMIN_VIEW">
+                            <div className="admin-link">
+                                <Link to='/admin/'>
+                                    <AdminPanelSettings className="action-icon" />
+                                </Link>
+                            </div>
+                        </Protected>
+                        <Protected privilege="VIEW_TABLES">
+                            <div className="table-view-link">
+                                <Link to='/tableview'>
+                                    <TableRestaurant className="action-icon" />
+                                </Link>
+                            </div>
+                        </Protected>
+                        <div className="user-menu">
+                            {user !== null ? (
+                                <div className="user-info" onClick={() => setToken(null)}>
+                                    <span className="user-name">{user.name}</span>
+                                </div>
+                            ) : (
+                                <Link to='/login' className="login-link">
+                                    <Translate translationKey="gui.login" />
+                                </Link>
+                            )}
+                        </div>
+                    </div>
                 </div>
-                <Protected privilege="ADMIN_VIEW">
-                    <div className="admin-page">
-                        <Link to='/admin/'>
-                            <Translate translationKey="gui.adminpage"/>
-                        </Link>
-                    </div>
-                </Protected>
-                <Protected privilege="PLACE_ORDER">
-                    <div className="cart">
-                        <Link to='/cart'>
-                            <Icon component={ShoppingCart} />{totalItems}
-                        </Link>
-                    </div>
-                </Protected>
-                <Protected privilege="VIEW_TABLES">
-                    <div className="table-view-link">
-                        <Link to='/tableview'>
-                            TableView
-                        </Link>
-                    </div>
-                </Protected>
             </div>
-        </header >
+        </header>
     );
 };

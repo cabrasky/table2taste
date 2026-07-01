@@ -11,3 +11,4 @@ packages/db/data/
 
 # node
 node_modules/
+.env.cloudflare

@@ -1,0 +1,127 @@
+# ── Preview Backend ──
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: table2taste-backend
+  namespace: table2taste-preview-__SUBDOMAIN__
+  labels:
+    app: table2taste-backend
+    type: preview
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: table2taste-backend
+  template:
+    metadata:
+      labels:
+        app: table2taste-backend
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h db -p 5432 -U "$PGUSER"; do
+                echo "waiting for db..."
+                sleep 2
+              done
+          env:
+            - name: PGUSER
+              value: "table-2-taste"
+            - name: PGPASSWORD
+              value: "preview_pass_2024"
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "50m"
+              memory: "64Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 70
+      containers:
+        - name: backend
+          image: 192.168.1.11:5000/table2taste-backend:__IMAGE_TAG__
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_URL
+              value: "jdbc:postgresql://db:5432/table2taste"
+            - name: POSTGRES_USER
+              value: "table-2-taste"
+            - name: POSTGRES_PASSWORD
+              value: "preview_pass_2024"
+            - name: JWT_SECRET
+              value: "preview-jwt-secret-not-for-production-123456"
+            - name: JWT_EXPIRATION_MS
+              value: "3600000"
+            - name: DEFAULT_LANGUAGE
+              value: "es"
+            - name: FILE_PATH
+              value: "uploads/"
+            - name: TABLE_PASSWORD
+              value: "preview123"
+            - name: SPRING_JPA_SHOW_SQL
+              value: "false"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "none"
+            - name: TZ
+              value: "Europe/Madrid"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Dliquibase.secureParsing=false"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: table2taste-backend
+  namespace: table2taste-preview-__SUBDOMAIN__
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: table2taste-backend
+  type: ClusterIP
+---
+# Alias for backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: table2taste-preview-__SUBDOMAIN__
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: table2taste-backend
+  type: ClusterIP

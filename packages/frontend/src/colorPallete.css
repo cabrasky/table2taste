@@ -1,28 +1,48 @@
 :root {
-    --main-color: #395542;
-    --main-color-100: #0b110d;
-    --main-color-90: #131c16;
-    --main-color-80: #1d2b21;
-    --main-color-70: #26392c;
-    --main-color-60: #304737;
-    --main-color-50: #5a7162;
-    --main-color-40: #7b8e81;
-    --main-color-30: #9caaa1;
-    --main-color-20: #bdc6c0;
-    --main-color-10: #d7ddd9;
+    /* Primary: Warm Terracotta/Rust */
+    --main-color: #C36241;
+    --main-color-100: #1f0a04;
+    --main-color-90: #331108;
+    --main-color-80: #4c1a0d;
+    --main-color-70: #662312;
+    --main-color-60: #802c17;
+    --main-color-50: #C36241;
+    --main-color-40: #d58c72;
+    --main-color-30: #e3b09c;
+    --main-color-20: #f0d0c2;
+    --main-color-10: #f8e8e1;
 
-    --secondary-color: #55394C;
-    --secondary-color-100: #110b0f;
-    --secondary-color-90: #1c1319;
-    --secondary-color-80: #2b1d26;
-    --secondary-color-70: #392633;
-    --secondary-color-60: #47303f;
-    --secondary-color-50: #715a6a;
-    --secondary-color-40: #8e7b88;
-    --secondary-color-30: #aa9ca6;
-    --secondary-color-20: #c6bdc3;
-    --secondary-color-10: #ddd7db;
+    /* Secondary: Olive Green */
+    --secondary-color: #7A8B5E;
+    --secondary-color-100: #0c0e09;
+    --secondary-color-90: #14170f;
+    --secondary-color-80: #1f2317;
+    --secondary-color-70: #2a301f;
+    --secondary-color-60: #353c27;
+    --secondary-color-50: #7A8B5E;
+    --secondary-color-40: #9aa987;
+    --secondary-color-30: #b5c0a7;
+    --secondary-color-20: #d0d6c7;
+    --secondary-color-10: #e7eae3;
 
+    /* Accent: Golden */
+    --accent-color: #D4A853;
+    --accent-color-100: #1f1607;
+    --accent-color-90: #33240c;
+    --accent-color-80: #4c3612;
+    --accent-color-70: #664819;
+    --accent-color-60: #805a1f;
+    --accent-color-50: #D4A853;
+    --accent-color-40: #dfbe78;
+    --accent-color-30: #e8d09c;
+    --accent-color-20: #f0e2bd;
+    --accent-color-10: #f8f0de;
+
+    /* Background */
+    --bg-cream: #FFF8F0;
+    --bg-dark: #1A1A1A;
+
+    /* Greys */
     --grey: #8c9091;
     --grey-100: #1c1d1d;
     --grey-90: #2f3030;

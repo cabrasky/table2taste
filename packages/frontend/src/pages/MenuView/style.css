@@ -1,55 +1,393 @@
 .menu-view {
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    min-height: 100vh;
+    background: var(--bg-cream);
 }
 
-.menu-view .content {
-    display: flex;
-    flex-direction:row;
+/* ====== Hero Section ====== */
+.menu-hero {
+    background: linear-gradient(135deg, var(--main-color) 0%, var(--main-color-70) 50%, var(--secondary-color) 100%);
+    padding: 60px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
-
-.menu-view .menu-item-list {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-grow: 1;
-    padding: 15px;
-    align-items: flex-start;
-    align-content: flex-start;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-
-.menu-view .sidebar {
-    width: min(100%, 300px);
-    padding: 20px;
-    background-color: #f4f4f4;
-    border-right: 1px solid #ddd;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    transition: all 0.5s ease-in-out;
-}
-
-.menu-view .toggle-sidebar-button {
-    align-items: flex-start;
+.menu-hero::before {
+    content: '';
     position: absolute;
-    left: -60px;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    animation: heroShimmer 8s ease-in-out infinite;
 }
 
-.menu-view .allergen-filter-form {
+@keyframes heroShimmer {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(5%, 5%); }
+}
+
+.menu-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.menu-hero-title {
+    font-family: "Young Serif", serif;
+    font-size: 48px;
+    color: white;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeInUp 0.6s ease;
+}
+
+.menu-hero-subtitle {
+    font-family: var(--p-font-family);
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+    animation: fadeInUp 0.6s ease 0.1s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ====== Toolbar ====== */
+.menu-toolbar {
+    background: white;
+    border-bottom: 1px solid var(--grey-20);
+    position: sticky;
+    top: 64px;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.menu-toolbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.menu-search {
+    flex: 1;
+    max-width: 500px;
+}
+
+.menu-search .MuiOutlinedInput-root {
+    border-radius: 12px;
+    background: var(--bg-cream);
+    transition: all 0.2s ease;
+}
+
+.menu-search .MuiOutlinedInput-root:hover {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.menu-search .MuiOutlinedInput-root.Mui-focused {
+    background: white;
+    box-shadow: 0 2px 12px rgba(195, 98, 65, 0.12);
+}
+
+.menu-search .MuiOutlinedInput-notchedOutline {
+    border-color: var(--grey-30);
+}
+
+.menu-search .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: var(--main-color-40);
+}
+
+.menu-search .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--main-color);
+    border-width: 2px;
+}
+
+.search-icon {
+    color: var(--grey-50);
+}
+
+.filter-button {
+    border-radius: 12px !important;
+    border-color: var(--grey-30) !important;
+    color: var(--grey-70) !important;
+    text-transform: none !important;
+    font-family: var(--p-font-family) !important;
+    font-weight: 500 !important;
+    padding: 8px 20px !important;
+    gap: 8px !important;
+    transition: all 0.2s ease !important;
+    white-space: nowrap;
+}
+
+.filter-button:hover {
+    border-color: var(--main-color) !important;
+    color: var(--main-color) !important;
+    background: rgba(195, 98, 65, 0.04) !important;
+}
+
+.filter-badge .MuiBadge-badge {
+    background-color: var(--main-color) !important;
+}
+
+/* ====== Category Tabs ====== */
+.category-tabs-container {
+    background: white;
+    border-bottom: 1px solid var(--grey-20);
+}
+
+.category-tabs {
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 48px !important;
+}
+
+.category-tabs .MuiTabs-scrollButtons.Mui-disabled {
+    opacity: 0.3;
+}
+
+.category-tab {
+    min-height: 48px !important;
+    padding: 8px 20px !important;
+    text-transform: none !important;
+    font-family: var(--p-font-family) !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: var(--grey-60) !important;
+    transition: all 0.2s ease !important;
+}
+
+.category-tab.Mui-selected {
+    color: var(--main-color) !important;
+    font-weight: 600 !important;
+}
+
+.category-tab:hover {
+    color: var(--main-color) !important;
+    background: rgba(195, 98, 65, 0.04) !important;
+}
+
+.category-tab-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category-tab-icon {
+    display: flex;
+    align-items: center;
+    color: var(--main-color-40);
+    font-size: 20px;
+}
+
+.category-tab.Mui-selected .category-tab-icon {
+    color: var(--main-color);
+}
+
+/* ====== Menu Content ====== */
+.menu-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    width: 100%;
+    flex: 1;
+}
+
+.menu-items-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.menu-item-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.menu-item-link:hover {
+    color: inherit;
+}
+
+/* Empty state */
+.menu-empty {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--grey-50);
 }
 
-.menu-view .sidebar.closed {
-    transform: translateX(100%);
-    width: 0;
+.menu-empty-icon {
+    font-size: 64px !important;
+    margin-bottom: 16px;
+    opacity: 0.5;
 }
 
-.menu-view .sidebar.open {
-    transform: translateX(0);
+.menu-empty p {
+    font-size: 18px;
+    font-family: var(--p-font-family);
+}
+
+/* Admin add button */
+.menu-admin-add {
+    text-align: center;
+    margin-top: 32px;
+}
+
+.admin-add-btn {
+    display: inline-block;
+    padding: 12px 32px;
+    background: var(--main-color);
+    color: white;
+    border-radius: 12px;
+    font-family: var(--p-font-family);
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.admin-add-btn:hover {
+    background: var(--main-color-70);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(195, 98, 65, 0.3);
+    color: white;
+}
+
+/* ====== Allergen Drawer ====== */
+.allergen-drawer {
+    width: 320px;
+    padding: 0;
+    background: var(--bg-cream) !important;
+}
+
+.allergen-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--grey-20);
+    background: white;
+}
+
+.allergen-drawer-header h3 {
+    font-family: "Young Serif", serif;
+    font-size: 20px;
+    color: var(--main-color);
+    margin: 0;
+}
+
+.allergen-drawer-content {
+    padding: 16px 24px;
+}
+
+.allergen-filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.allergen-filter-form .MuiFormControlLabel-root {
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.allergen-filter-form .MuiFormControlLabel-root:hover {
+    background: rgba(195, 98, 65, 0.06);
+}
+
+.allergen-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--p-font-family);
+    font-size: 14px;
+}
+
+.allergen-filter-item .allergen-icon {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.clear-filters-btn {
+    margin-top: 16px !important;
+    width: 100% !important;
+    text-transform: none !important;
+    font-family: var(--p-font-family) !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+}
+
+/* ====== Responsive ====== */
+@media only screen and (max-width: 768px) {
+    .menu-hero {
+        padding: 40px 16px 32px;
+    }
+
+    .menu-hero-title {
+        font-size: 32px;
+    }
+
+    .menu-hero-subtitle {
+        font-size: 16px;
+    }
+
+    .menu-toolbar-inner {
+        padding: 10px 16px;
+        flex-wrap: wrap;
+    }
+
+    .menu-search {
+        max-width: 100%;
+        flex: 1 1 100%;
+        order: 2;
+    }
+
+    .filter-button {
+        flex-shrink: 0;
+    }
+
+    .menu-content {
+        padding: 16px;
+    }
+
+    .menu-items-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .category-tabs-container {
+        overflow-x: auto;
+    }
+
+    .category-tab {
+        padding: 8px 14px !important;
+        font-size: 13px !important;
+    }
+
+    .allergen-drawer {
+        width: 280px;
+    }
 }
