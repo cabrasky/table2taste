@@ -9,5 +9,5 @@ VOLUME /tmp
 COPY defaultData.json .
 COPY --from=builder /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-Dliquibase.secureParsing=false","-jar","/app.jar"]
 EXPOSE 8080

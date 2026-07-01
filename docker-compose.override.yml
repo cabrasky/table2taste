@@ -1,0 +1,10 @@
+services:
+  frontend:
+    ports:
+      - "3001:80"
+  backend:
+    ports:
+      - "8081:8080"
+  db:
+    ports:
+      - "5443:5432"
