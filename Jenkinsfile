@@ -177,7 +177,7 @@ pipeline {
                         fi'''
                     sh '''./mvnw test jacoco:report -q \
                         -Dmaven.repo.local=/var/lib/jenkins/.m2/repository \
-                        -Dspring.datasource.url=jdbc:postgresql://localhost:${BUILD_NUMBER}/table2taste \
+                        -Dspring.datasource.url=jdbc:postgresql://localhost:$((15000 + BUILD_NUMBER))/table2taste \
                         -Dspring.datasource.username=table2taste \
                         -Dspring.datasource.password=1234test \
                         -Dspring.liquibase.enabled=true \
