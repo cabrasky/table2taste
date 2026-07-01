@@ -1,14 +1,14 @@
-# ── Table2Taste CI/CD Pipeline ─────────────────────────
-# Builds, tests, runs SonarQube analysis, and pushes Docker images
-#
-# Jenkins instance: jenkins.cabrasky.net (node1)
-# SonarQube:        sonar.cabrasky.net
-# Registry:         192.168.1.11:5000
-#
-# ⚠️ Jenkins does NOT have pipeline-utility-steps plugin
-#    → Use python3 instead of readJSON
-# ⚠️ 'when { not { ... } }' does NOT work
-#    → Use 'when { expression { return !... } }'
+// ── Table2Taste CI/CD Pipeline ─────────────────────────
+// Builds, tests, runs SonarQube analysis, and pushes Docker images
+//
+// Jenkins instance: jenkins.cabrasky.net (node1)
+// SonarQube:        sonar.cabrasky.net
+// Registry:         192.168.1.11:5000
+//
+// ⚠️ Jenkins does NOT have pipeline-utility-steps plugin
+//    → Use python3 instead of readJSON
+// ⚠️ 'when { not { ... } }' does NOT work
+//    → Use 'when { expression { return !... } }'
 
 pipeline {
     agent any
